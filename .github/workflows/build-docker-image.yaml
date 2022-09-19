@@ -9,7 +9,7 @@ on:
       tag:
         description: 'tag that the image will be built with'
         required: true
-        default: 'latest'
+        default: 'noetic'
       branch:
         description: 'branch that will be used to build image'
         required: true
@@ -41,11 +41,11 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build and push panther-docker
+    - name: Build and push panther
       uses: docker/build-push-action@v2
       with:
         context: .
         file: ./Dockerfile
         platforms: linux/arm64, linux/amd64
         push: true
-        tags: husarion/panther-docker:latest
+        tags: husarion/panther:noetic
