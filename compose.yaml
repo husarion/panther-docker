@@ -1,4 +1,15 @@
 services:
+  ros_master:
+    image: ros:noetic-ros-core
+    tty: true
+    container_name: ros_master
+    network_mode: host
+    ipc: host
+    restart: always
+    environment:
+      - ROS_IP=10.15.20.2
+    command: roscore
+
   panther_ros:
     build:
       context: .
@@ -10,7 +21,7 @@ services:
     tty: true
     environment:
       - ROS_IP=10.15.20.2
-      # - ROS_MASTER_URI=http://10.15.20.2:11311
+      - ROS_MASTER_URI=http://10.15.20.2:11311
       - PANTHER_HAS_CONFIG
       - PANTHER_IMU_LOCALIZATION_X
       - PANTHER_IMU_LOCALIZATION_Y
@@ -23,11 +34,11 @@ services:
       - /sys:/sys
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - /tmp/panther_config.yaml:/tmp/panther_config.yaml
-    command: roslaunch panther_bringup bringup.launch
+    command: roslaunch panther_bringup bringup.launch --wait
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic
-    tty: true 
+    tty: true
     container_name: webui-ros-joystick
     network_mode: host
     ipc: host
