@@ -4,18 +4,15 @@ services:
     tty: true
     container_name: ros_master
     network_mode: host
-    ipc: host
     restart: always
     environment:
       - ROS_IP=10.15.20.2
     command: roscore
 
   panther_ros:
-    build:
-      context: .
+    image: husarion/panther:noetic
     container_name: panther_ros
     network_mode: host
-    ipc: host
     restart: always
     privileged: true
     tty: true
@@ -41,9 +38,8 @@ services:
     tty: true
     container_name: webui-ros-joystick
     network_mode: host
-    ipc: host
     restart: always
     environment:
       - ROS_IP=10.15.20.2
       - ROS_MASTER_URI=http://10.15.20.2:11311
-    command: roslaunch webui-ros-joystick webui.launch linear_scale:=1 angular_scale:=1 --wait
+    command: roslaunch webui-ros-joystick panther_webui.launch e_stop:=false --wait
