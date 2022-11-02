@@ -26,6 +26,7 @@ services:
       - PANTHER_IMU_ORIENTATION_R
       - PANTHER_IMU_ORIENTATION_P
       - PANTHER_IMU_ORIENTATION_Y
+      - PANTHER_ROBOT_VERSION
     volumes:
       - /dev/gpiomem:/dev/gpiomem
       - /sys:/sys
