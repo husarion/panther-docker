@@ -8,17 +8,14 @@ RUN apt-get update  && \
     apt-get install -y \
         git \
         python3-dev \
-        python3-pip \
-        python3-pil && \
+        python3-pip && \
     pip3 install \
         rosdep \
-        imageio \
         vcstool && \
-    git clone https://github.com/byq77/apa102-pi.git src/apa102-pi  && \
+    git clone -b mc_panther_lights https://github.com/husarion/panther_ros.git src/panther_ros && \
+    vcs import src < src/panther_ros/panther/panther.repos && \
     cd src/apa102-pi && sudo python3 setup.py install && \
     cd /ros_ws && \
-    git clone https://github.com/husarion/panther_ros.git src/panther_ros  && \
-    vcs import src < src/panther_ros/panther/panther.repos && \
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install --from-paths src -y -i && \
