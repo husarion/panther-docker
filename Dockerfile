@@ -12,7 +12,7 @@ RUN apt-get update  && \
     pip3 install \
         rosdep \
         vcstool && \
-    git clone -b mc_panther_lights https://github.com/husarion/panther_ros.git src/panther_ros && \
+    git clone -b mv_panther_lights https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther.repos && \
     cd src/apa102-pi && sudo python3 setup.py install && \
     cd /ros_ws && \
