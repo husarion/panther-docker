@@ -10,12 +10,11 @@ RUN apt-get update  && \
         python3-dev \
         python3-pip && \
     pip3 install \
+        apa102-pi \
         rosdep \
         vcstool && \
     git clone https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther.repos && \
-    cd src/apa102-pi && sudo python3 setup.py install && \
-    cd /ros_ws && \
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install --from-paths src -y -i && \
