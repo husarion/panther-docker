@@ -12,6 +12,7 @@ RUN apt-get update  && \
     pip3 install \
         apa102-pi \
         rosdep \
+        psutil \
         vcstool && \
     git clone https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther.repos && \
