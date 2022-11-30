@@ -1,7 +1,7 @@
 services:
+
   ros_master:
     image: ros:noetic-ros-core
-    tty: true
     container_name: ros_master
     network_mode: host
     restart: always
@@ -14,7 +14,6 @@ services:
     container_name: panther_ros
     network_mode: host
     restart: always
-    privileged: true
     tty: true
     environment:
       - ROS_IP=10.15.20.2
@@ -27,16 +26,17 @@ services:
       - PANTHER_IMU_ORIENTATION_P
       - PANTHER_IMU_ORIENTATION_Y
       - PANTHER_ROBOT_VERSION
+    devices:
+      - /dev/bus/usb
+      - /dev/gpiomem
+      - /dev/spidev0.0
     volumes:
-      - /dev/gpiomem:/dev/gpiomem
-      - /sys:/sys
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - /tmp/panther_config.yaml:/tmp/panther_config.yaml
     command: roslaunch panther_bringup bringup.launch --wait
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic
-    tty: true
     container_name: webui-ros-joystick
     network_mode: host
     restart: always
