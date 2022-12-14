@@ -1,0 +1,15 @@
+services:
+  panther_gazebo:
+    image: husarion/panther:noetic-simulation
+    runtime: nvidia
+    environment:
+      - "DISPLAY"
+      - "QT_X11_NO_MITSHM=1"
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,display
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./panther.rviz:/ros_ws/src/panther_ros/panther_description/rviz/panther.rviz
+      - ./panther.urdf.xacro:/ros_ws/src/panther_ros/panther_description/urdf/panther.urdf.xacro
+      - ./panther_nvidia.launch:/ros_ws/src/panther_ros/panther_gazebo/launch/panther_nvidia.launch
+    command: roslaunch panther_gazebo panther_nvidia.launch

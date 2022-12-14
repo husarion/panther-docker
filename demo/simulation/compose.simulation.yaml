@@ -1,0 +1,10 @@
+services:
+
+  panther_gazebo:
+    image: husarion/panther:noetic-simulation
+    environment:
+      - "DISPLAY"
+      - "QT_X11_NO_MITSHM=1"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    command: roslaunch panther_gazebo panther_rviz.launch
