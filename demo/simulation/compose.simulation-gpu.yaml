@@ -1,7 +1,10 @@
 services:
 
   panther_gazebo:
-    image: husarion/panther:noetic-simulation
+    # image: husarion/panther:noetic-simulation
+    build:
+      context: ./../..
+      dockerfile: Dockerfile.simulation
     runtime: nvidia
     tty: true
     environment:
