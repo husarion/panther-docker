@@ -12,7 +12,7 @@ RUN apt-get update  && \
     pip3 install \
         rosdep && \
     git clone -b ros1 https://github.com/husarion/ros_components_description.git src/ros_components_description && \
-    git clone -b mv-panther-gazebo https://github.com/husarion/panther_ros.git && \
+    git clone https://github.com/husarion/panther_ros.git && \
     mv panther_ros/panther_description/ src/panther_description && \
     mv panther_ros/panther_gazebo/ src/panther_gazebo && \
     rm -rf panther_ros && \
