@@ -2,6 +2,7 @@ services:
   
   bridge:
     image: husarion/ros:galactic-ros1-bridge
+    container_name: ros-bridge
     restart: always
     network_mode: host
     ipc: host

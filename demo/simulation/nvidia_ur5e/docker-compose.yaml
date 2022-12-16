@@ -2,7 +2,7 @@ services:
 
   ur-gazebo:
     image: husarion/ur5e:melodic
-    container_name: ur-gazebo
+    container_name: panther_gazebo
     runtime: nvidia
     environment:
       - DISPLAY

@@ -2,6 +2,7 @@ services:
   
   panther_gazebo:
     image: husarion/panther:noetic-simulation
+    container_name: panther_gazebo
     environment:
       - "DISPLAY"
       - "QT_X11_NO_MITSHM=1"
