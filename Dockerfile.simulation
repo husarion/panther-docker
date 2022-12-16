@@ -1,0 +1,29 @@
+FROM ros:noetic-ros-core
+
+SHELL ["/bin/bash", "-c"]
+
+WORKDIR /ros_ws
+
+RUN apt-get update  && \
+    apt-get install -y \
+        git \
+        python3-dev \
+        python3-pip && \
+    pip3 install \
+        rosdep && \
+    git clone -b ros1 https://github.com/husarion/ros_components_description.git src/ros_components_description && \
+    git clone https://github.com/husarion/panther_ros.git && \
+    mv panther_ros/panther_description/ src/panther_description && \
+    mv panther_ros/panther_gazebo/ src/panther_gazebo && \
+    rm -rf panther_ros && \
+    source /opt/ros/$ROS_DISTRO/setup.bash && \
+    rosdep init && \
+    rosdep update --rosdistro $ROS_DISTRO && \
+    rosdep install --from-paths src -y -i && \
+    catkin_make -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Release && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY ./ros_entrypoint.sh / 
+ENTRYPOINT ["/ros_entrypoint.sh"]
