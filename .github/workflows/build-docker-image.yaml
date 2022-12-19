@@ -44,4 +44,4 @@ jobs:
         file: ${{ matrix.dockerfile }}
         platforms: linux/arm64, linux/amd64
         push: true
-        tags: ${{ matrix.docker_tag }}
+        tags: husarion/panther:${{ matrix.docker_tag }}
