@@ -16,7 +16,7 @@ RUN apt-get update  && \
         vcstool && \
     git clone https://github.com/husarion/panther_ros.git src/panther_ros && \
     cd src/panther_ros && \
-    git checkout -b ros1 db30a705ffde54c12e304cfe7629fc75b0cebb87 && \
+    git checkout db30a705ffde54c12e304cfe7629fc75b0cebb87 && \
     cd ../.. && \
     vcs import src < src/panther_ros/panther/panther.repos && \
     rm -r src/panther_ros/panther_gazebo && \
