@@ -3,19 +3,13 @@ name: Build/Publish Docker Image
 on:
   push:
     branches:
-      - 'ros1'
+      - 'old-lights-backup'
   
 jobs:
   build_panther_ros:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - dockerfile: Dockerfile.hardware
-            docker_tag: noetic
-          - dockerfile: Dockerfile.simulation
-            docker_tag: noetic-simulation
 
     steps:
         
@@ -41,7 +35,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ${{ matrix.dockerfile }}
+        file: Dockerfile.hardware
         platforms: linux/arm64, linux/amd64
         push: true
-        tags: husarion/panther:${{ matrix.docker_tag }}
+        tags: husarion/panther:noetic-lights-backup
