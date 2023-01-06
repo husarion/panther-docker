@@ -2,6 +2,9 @@ FROM ros:noetic-ros-core
 
 SHELL ["/bin/bash", "-c"]
 
+ENV HUSARION_ROS_BUILD_TYPE=simulation
+ENV SIMULATION_ENGINE=gazebo-classic
+
 WORKDIR /ros_ws
 
 RUN apt-get update  && \

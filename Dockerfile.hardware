@@ -2,6 +2,8 @@ FROM ros:noetic-ros-core
 
 SHELL ["/bin/bash", "-c"]
 
+ENV HUSARION_ROS_BUILD_TYPE=hardware
+
 WORKDIR /ros_ws
 
 RUN apt-get update  && \
