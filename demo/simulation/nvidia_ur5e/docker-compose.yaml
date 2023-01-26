@@ -15,3 +15,12 @@ services:
     command: >
       roslaunch ur5e_bringup ur5e_gazebo.launch
         use_rviz:=true
+
+  webui-ros-joystick:
+    image: husarion/webui-ros-joystick:noetic
+    container_name: webui-ros-joystick
+    environment:
+      - ROS_MASTER_URI=http://panther_gazebo:11311
+    ports:
+      - 8000:8000
+    command: roslaunch webui-ros-joystick panther_webui.launch --wait

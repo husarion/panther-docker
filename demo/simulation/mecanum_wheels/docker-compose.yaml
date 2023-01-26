@@ -4,9 +4,18 @@ services:
     image: husarion/panther:noetic-simulation
     container_name: panther_gazebo
     environment:
-      - "DISPLAY"
-      - "QT_X11_NO_MITSHM=1"
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ./panther_mecanum.launch:/ros_ws/src/panther_gazebo/launch/panther_mecanum.launch
     command: roslaunch panther_gazebo panther_mecanum.launch
+
+  webui-ros-joystick:
+    image: husarion/webui-ros-joystick:noetic
+    container_name: webui-ros-joystick
+    environment:
+      - ROS_MASTER_URI=http://panther_gazebo:11311
+    ports:
+      - 8000:8000
+    command: roslaunch webui-ros-joystick panther_webui.launch --wait

@@ -3,10 +3,9 @@ services:
     image: husarion/panther:noetic-simulation
     container_name: panther_gazebo
     runtime: nvidia
-    network_mode: host
     environment:
-      - "DISPLAY"
-      - "QT_X11_NO_MITSHM=1"
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility,display
     volumes:
@@ -14,4 +13,13 @@ services:
       - ./panther.urdf.xacro:/ros_ws/src/panther_description/urdf/panther.urdf.xacro
       - ./panther_velodyne.launch:/ros_ws/src/panther_gazebo/launch/panther_velodyne.launch
       - ./panther.rviz:/ros_ws/src/panther_description/rviz/panther.rviz
-    command: roslaunch panther_gazebo panther_velodyne.launch use_rviz:=false
+    command: roslaunch panther_gazebo panther_velodyne.launch use_rviz:=true
+
+  webui-ros-joystick:
+    image: husarion/webui-ros-joystick:noetic
+    container_name: webui-ros-joystick
+    environment:
+      - ROS_MASTER_URI=http://panther_gazebo:11311
+    ports:
+      - 8000:8000
+    command: roslaunch webui-ros-joystick panther_webui.launch --wait
