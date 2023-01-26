@@ -6,6 +6,8 @@ ENV HUSARION_ROS_BUILD_TYPE=simulation
 
 WORKDIR /ros_ws
 
+ENV HUSARION_ROS_BUILD_TYPE=simulation
+
 RUN apt-get update  && \
     apt-get install -y \
         git \
