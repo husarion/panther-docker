@@ -26,8 +26,6 @@
     imu_rot_y="$(arg imu_rot_y)"
     wheel_config_path="$(arg wheel_config_path)"
     simulation_engine="$(arg simulation_engine)" />
-
-  <!-- include file with definition of xacro macro of sensor -->
   <xacro:include filename="$(find ros_components_description)/urdf/velodyne_puck.urdf.xacro" ns="lidar" />
 
   <!-- evaluate the macro and place the sensor on robot -->
