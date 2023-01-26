@@ -27,8 +27,6 @@
     wheel_config_path="$(arg wheel_config_path)"
     simulation_engine="$(arg simulation_engine)" />
   <xacro:include filename="$(find ros_components_description)/urdf/velodyne_puck.urdf.xacro" ns="lidar" />
-
-  <!-- evaluate the macro and place the sensor on robot -->
   <xacro:lidar.velodyne_puck
     parent_link="cover_link"
     xyz="0.185 0.0 0.0"
