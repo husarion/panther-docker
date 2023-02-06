@@ -14,6 +14,7 @@ services:
     container_name: panther_ros
     network_mode: host
     restart: always
+    privileged: true
     tty: true
     environment:
       - ROS_IP=10.15.20.2
@@ -26,10 +27,6 @@ services:
       - PANTHER_IMU_ORIENTATION_P
       - PANTHER_IMU_ORIENTATION_Y
       - PANTHER_ROBOT_VERSION
-    devices:
-      - /dev/bus/usb
-      - /dev/gpiomem
-      - /dev/spidev0.0
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - /tmp/panther_config.yaml:/tmp/panther_config.yaml
