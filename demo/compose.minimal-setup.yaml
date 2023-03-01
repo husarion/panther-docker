@@ -60,4 +60,4 @@ services:
     command: >
       roslaunch --wait
       joy2twist gamepad_controller.launch
-      joy2twist_params_file:=$(find joy2twist)/config/joy2twist_panther.yaml
+      joy2twist_params_file:=$$(find joy2twist)/config/joy2twist_panther.yaml
