@@ -30,7 +30,9 @@ services:
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - /tmp/panther_config.yaml:/tmp/panther_config.yaml
-    command: roslaunch panther_bringup bringup.launch --wait
+    command: >
+      roslaunch --wait
+      panther_bringup bringup.launch
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic
@@ -40,4 +42,22 @@ services:
     environment:
       - ROS_IP=10.15.20.2
       - ROS_MASTER_URI=http://10.15.20.2:11311
-    command: roslaunch webui-ros-joystick panther_webui.launch e_stop:=true --wait
+    command: >
+      roslaunch --wait
+      webui-ros-joystick panther_webui.launch
+      e_stop:=true
+
+  gamepad_controller:
+    image: husarion/joy2twist:noetic
+    container_name: gamepad_controller
+    network_mode: host
+    restart: always
+    devices:
+      - /dev/input/js0
+    environment:
+      - ROS_IP=10.15.20.2
+      - ROS_MASTER_URI=http://10.15.20.2:11311
+    command: >
+      roslaunch --wait
+      joy2twist gamepad_controller.launch
+      joy2twist_params_file:=$$(find joy2twist)/config/joy2twist_panther.yaml
