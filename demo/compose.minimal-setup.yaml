@@ -4,8 +4,8 @@ x-common-config:
   ipc: host
   tty: true
   environment:
-      - ROS_IP=10.15.20.2
-      - ROS_MASTER_URI=http://10.15.20.2:11311
+    - ROS_IP=10.15.20.2
+    - ROS_MASTER_URI=http://10.15.20.2:11311
 
 services:
   ros_master:
