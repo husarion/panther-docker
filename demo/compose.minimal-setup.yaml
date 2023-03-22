@@ -1,6 +1,7 @@
 x-common-config:
   &common-config
   network_mode: host
+  restart: always
   ipc: host
   tty: true
   environment:
