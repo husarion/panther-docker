@@ -1,24 +1,26 @@
-services:
+x-common-config:
+  &common-config
+  network_mode: host
+  restart: always
+  ipc: host
+  tty: true
+  environment:
+    - ROS_IP=10.15.20.2
+    - ROS_MASTER_URI=http://10.15.20.2:11311
 
+services:
   ros_master:
     image: ros:noetic-ros-core
     container_name: ros_master
-    network_mode: host
-    restart: always
-    environment:
-      - ROS_IP=10.15.20.2
+    <<: *common-config
     command: roscore
 
   panther_ros:
     image: husarion/panther:noetic
     container_name: panther_ros
-    network_mode: host
-    restart: always
+    <<: *common-config
     privileged: true
-    tty: true
     environment:
-      - ROS_IP=10.15.20.2
-      - ROS_MASTER_URI=http://10.15.20.2:11311
       - PANTHER_HAS_CONFIG
       - PANTHER_IMU_LOCALIZATION_X
       - PANTHER_IMU_LOCALIZATION_Y
@@ -37,11 +39,7 @@ services:
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic
     container_name: webui-ros-joystick
-    network_mode: host
-    restart: always
-    environment:
-      - ROS_IP=10.15.20.2
-      - ROS_MASTER_URI=http://10.15.20.2:11311
+    <<: *common-config
     command: >
       roslaunch --wait
       webui-ros-joystick panther_webui.launch
@@ -50,13 +48,9 @@ services:
   gamepad_controller:
     image: husarion/joy2twist:noetic
     container_name: gamepad_controller
-    network_mode: host
-    restart: always
+    <<: *common-config
     devices:
       - /dev/input/js0
-    environment:
-      - ROS_IP=10.15.20.2
-      - ROS_MASTER_URI=http://10.15.20.2:11311
     command: >
       roslaunch --wait
       joy2twist gamepad_controller.launch
