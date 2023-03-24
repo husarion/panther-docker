@@ -16,7 +16,7 @@ services:
     command: roscore
 
   panther_ros:
-    image: husarion/panther:noetic
+    image: husarion/panther:noetic-1.0.0-20230324
     container_name: panther_ros
     <<: *common-config
     privileged: true
@@ -37,7 +37,7 @@ services:
       panther_bringup bringup.launch
 
   webui-ros-joystick:
-    image: husarion/webui-ros-joystick:noetic
+    image: husarion/webui-ros-joystick:noetic-0.0.1-20230324
     container_name: webui-ros-joystick
     <<: *common-config
     command: >
@@ -46,7 +46,7 @@ services:
       e_stop:=true
 
   gamepad_controller:
-    image: husarion/joy2twist:noetic
+    image: husarion/joy2twist:noetic-1.0.0-20230324
     container_name: gamepad_controller
     <<: *common-config
     devices:
