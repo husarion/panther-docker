@@ -16,19 +16,11 @@ services:
     command: roscore
 
   panther_ros:
-    image: husarion/panther:noetic
+    image: husarion/panther:noetic-1.0.0-20230324
     container_name: panther_ros
     <<: *common-config
     privileged: true
-    environment:
-      - PANTHER_HAS_CONFIG
-      - PANTHER_IMU_LOCALIZATION_X
-      - PANTHER_IMU_LOCALIZATION_Y
-      - PANTHER_IMU_LOCALIZATION_Z
-      - PANTHER_IMU_ORIENTATION_R
-      - PANTHER_IMU_ORIENTATION_P
-      - PANTHER_IMU_ORIENTATION_Y
-      - PANTHER_ROBOT_VERSION
+    env_file: /tmp/panther_config.conf
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - /tmp/panther_config.yaml:/tmp/panther_config.yaml
@@ -37,7 +29,7 @@ services:
       panther_bringup bringup.launch
 
   webui-ros-joystick:
-    image: husarion/webui-ros-joystick:noetic
+    image: husarion/webui-ros-joystick:noetic-0.0.1-20230324
     container_name: webui-ros-joystick
     <<: *common-config
     command: >
@@ -46,7 +38,7 @@ services:
       e_stop:=true
 
   gamepad_controller:
-    image: husarion/joy2twist:noetic
+    image: husarion/joy2twist:noetic-1.0.0-20230324
     container_name: gamepad_controller
     <<: *common-config
     devices:
