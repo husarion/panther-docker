@@ -138,7 +138,7 @@ Visualization Manager:
       Value: false
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /panther/lights/driver/rear_panel_frame
+      Image Topic: /panther/lights/driver/front_panel_frame
       Max Value: 1
       Median window: 5
       Min Value: 0
