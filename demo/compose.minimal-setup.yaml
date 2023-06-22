@@ -16,14 +16,14 @@ services:
     command: roscore
 
   panther_ros:
-    image: husarion/panther:noetic-1.0.0-20230324-stable
+    image: husarion/panther:noetic
     container_name: panther_ros
     <<: *common-config
     privileged: true
-    env_file: /tmp/panther_config.conf
+    env_file: /run/husarion/panther_config.env
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
-      - /tmp/panther_config.yaml:/tmp/panther_config.yaml
+      - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
       roslaunch --wait
       panther_bringup bringup.launch
