@@ -16,13 +16,17 @@ services:
     command: roscore
 
   panther_ros:
-    image: husarion/panther:noetic
+    image: husarion/panther:noetic-nightly
     container_name: panther_ros
     <<: *common-config
-    privileged: true
     env_file: /run/husarion/panther_config.env
+    devices:
+      - /dev/gpiochip0
+      - /dev/spidev0.0
+      - /dev/spidev0.1
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+      - /sys/bus/iio/devices:/sys/bus/iio/devices
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
       roslaunch --wait
