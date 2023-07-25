@@ -19,18 +19,18 @@ services:
     image: husarion/panther:noetic-nightly
     container_name: panther_ros
     <<: *common-config
-    env_file: /run/husarion/panther_config.env
     devices:
       - /dev/gpiochip0
       - /dev/spidev0.0
       - /dev/spidev0.1
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
-      - /sys/bus/iio/devices:/sys/bus/iio/devices
+      - /sys/bus/:/sys/bus/
+      - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
       roslaunch --wait
-      panther_bringup bringup.launch
+      panther_bringup bringup.launch exit_on_wrong_hw:=false
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic-0.0.1-20230324-stable
