@@ -20,6 +20,7 @@ services:
     container_name: panther_ros
     <<: *common-config
     devices:
+      - /dev/bus/usb
       - /dev/gpiochip0
       - /dev/spidev0.0
       - /dev/spidev0.1
@@ -30,7 +31,8 @@ services:
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
       roslaunch --wait
-      panther_bringup bringup.launch exit_on_wrong_hw:=false
+      panther_bringup bringup.launch
+      exit_on_wrong_hw:=false
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic-0.0.1-20230324-stable
