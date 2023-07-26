@@ -26,7 +26,7 @@ services:
       - /dev/spidev0.1
     volumes:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
-      - /sys/bus/:/sys/bus/
+      - /sys/bus/iio/devices:/sys/bus/iio/devices
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
