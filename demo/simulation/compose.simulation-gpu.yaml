@@ -1,7 +1,7 @@
 services:
 
   panther_gazebo:
-    image: husarion/panther:noetic-simulation
+    image: husarion/panther-gazebo:noetic-1.0.21-20230717
     container_name: panther_gazebo
     runtime: nvidia
     tty: true
@@ -15,10 +15,13 @@ services:
     command: roslaunch panther_gazebo panther_simulation.launch
 
   webui-ros-joystick:
-    image: husarion/webui-ros-joystick:noetic
+    image: husarion/webui-ros-joystick:noetic-0.0.1-20230324-stable
     container_name: webui-ros-joystick
     environment:
       - ROS_MASTER_URI=http://panther_gazebo:11311
     ports:
       - 8000:8000
-    command: roslaunch webui-ros-joystick panther_webui.launch --wait
+    command: >
+      roslaunch --wait
+      webui-ros-joystick panther_webui.launch 
+      e_stop:=false
