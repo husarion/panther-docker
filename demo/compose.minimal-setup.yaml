@@ -35,7 +35,7 @@ services:
       exit_on_wrong_hw:=false
 
   webui-ros-joystick:
-    image: husarion/webui-ros-joystick:noetic-0.0.1-20230324-stable
+    image: husarion/webui-ros-joystick:noetic-0.0.1-20230510-stable
     container_name: webui-ros-joystick
     <<: *common-config
     command: >
