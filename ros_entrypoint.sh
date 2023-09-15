@@ -5,8 +5,10 @@ set -e
 source "/opt/ros/$ROS_DISTRO/setup.bash"
 source "/ros_ws/devel/setup.bash"
 
-# source eeprom environemnt variables
-set -a
-source "/run/husarion/panther_config.env"
+if [ "$HUSARION_ROS_BUILD_TYPE" = "hardware" ]; then
+  # source eeprom environemnt variables
+  set -a
+  source "/run/husarion/panther_config.env"
+fi
 
 exec "$@"
