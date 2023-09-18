@@ -1,23 +1,24 @@
-<?xml version='1.0'?>
-<robot name="panther" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="panther" xmlns:xacro="http://wiki.ros.org/xacro">
 
-  <xacro:arg name="use_sim" default="false" /> 
-  <xacro:arg name="use_gpu" default="true" /> 
-  <xacro:arg name="dual_bat" default="false" /> 
-  <xacro:arg name="imu_pos_x" default="0.169" /> 
-  <xacro:arg name="imu_pos_y" default="0.025" /> 
-  <xacro:arg name="imu_pos_z" default="0.092" /> 
-  <xacro:arg name="imu_rot_r" default="0.0" /> 
-  <xacro:arg name="imu_rot_p" default="0.0" /> 
-  <xacro:arg name="imu_rot_y" default="-1.57" /> 
+  <xacro:arg name="use_sim" default="false" />
+  <xacro:arg name="use_gpu" default="false" />
+  <xacro:arg name="dual_bat" default="false" />
+  <xacro:arg name="imu_pos_x" default="0.169" />
+  <xacro:arg name="imu_pos_y" default="0.025" />
+  <xacro:arg name="imu_pos_z" default="0.092" />
+  <xacro:arg name="imu_rot_r" default="0.0" />
+  <xacro:arg name="imu_rot_p" default="0.0" />
+  <xacro:arg name="imu_rot_y" default="-1.57" />
   <xacro:arg name="wheel_config_path" default="$(find panther_description)/config/WH01.yaml" />
-  <xacro:arg name="simulation_engine" default="gazebo-classic" /> 
+  <xacro:arg name="simulation_engine" default="gazebo-classic" />
+  <xacro:arg name="use_ros_control" default="false" />
 
   <xacro:include filename="$(find panther_description)/urdf/panther_macro.urdf.xacro" ns="husarion" />
-  <xacro:include filename="$(find ros_components_description)/urdf/rplidar_s1.gazebo.xacro" ns="rplidar" />
-  <xacro:include filename="$(find ros_components_description)/urdf/orbbec_astra.gazebo.xacro" ns="astra" />
+  <xacro:include filename="$(find ros_components_description)/urdf/slamtec_rplidar_s1.urdf.xacro" ns="rplidar" />
+  <xacro:include filename="$(find ros_components_description)/urdf/orbbec_astra.urdf.xacro" ns="astra" />
 
-  <xacro:husarion.panther_robot 
+  <xacro:husarion.panther_robot
     use_sim="$(arg use_sim)"
     dual_bat="$(arg dual_bat)"
     imu_pos_x="$(arg imu_pos_x)"
@@ -27,27 +28,28 @@
     imu_rot_p="$(arg imu_rot_p)"
     imu_rot_y="$(arg imu_rot_y)"
     wheel_config_path="$(arg wheel_config_path)"
-    simulation_engine="$(arg simulation_engine)" />
+    simulation_engine="$(arg simulation_engine)"
+    use_ros_control="$(arg use_ros_control)" />
 
-  <xacro:rplidar.rplidar_s1 
-    parent_link="cover_link" 
-    xyz="0.185 0 0.0" 
-    rpy="0 0 0" 
-    use_gpu="$(arg use_gpu)" 
-    tf_prefix="front" 
+  <xacro:rplidar.slamtec_rplidar_s1
+    parent_link="cover_link"
+    xyz="0.185 0 0.0"
+    rpy="0 0 0"
+    use_gpu="$(arg use_gpu)"
+    tf_prefix="front"
     topic="laser/front/scan" />
 
-  <xacro:rplidar.rplidar_s1
+  <xacro:rplidar.slamtec_rplidar_s1
     parent_link="cover_link"
-    xyz="-0.185 0 0.0" 
-    rpy="0 0 ${pi/2}" 
-    use_gpu="$(arg use_gpu)" 
-    tf_prefix="rear" 
+    xyz="-0.185 0 0.0"
+    rpy="0 0 ${pi/2}"
+    use_gpu="$(arg use_gpu)"
+    tf_prefix="rear"
     topic="laser/rear/scan" />
 
-  <xacro:astra.orbbec_astra 
+  <xacro:astra.orbbec_astra
     parent_link="cover_link"
-    xyz="0.3 0 -0.03" 
+    xyz="0.3 0 -0.03"
     rpy="0 0 0" />
 
 </robot>

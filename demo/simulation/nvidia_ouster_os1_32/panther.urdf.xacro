@@ -1,5 +1,5 @@
-<?xml version='1.0'?>
-<robot name="panther" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="panther" xmlns:xacro="http://wiki.ros.org/xacro">
 
   <xacro:arg name="use_sim" default="false" />
   <xacro:arg name="use_gpu" default="false" />
@@ -12,9 +12,10 @@
   <xacro:arg name="imu_rot_y" default="-1.57" />
   <xacro:arg name="wheel_config_path" default="$(find panther_description)/config/WH01.yaml" />
   <xacro:arg name="simulation_engine" default="gazebo-classic" />
+  <xacro:arg name="use_ros_control" default="false" />
 
   <xacro:include filename="$(find panther_description)/urdf/panther_macro.urdf.xacro" ns="husarion" />
-  <xacro:include filename="$(find ros_components_description)/urdf/ouster_os1_32.gazebo.xacro" ns="ouster" />
+  <xacro:include filename="$(find ros_components_description)/urdf/ouster_os1_32.urdf.xacro" ns="ouster" />
 
   <xacro:husarion.panther_robot
     use_sim="$(arg use_sim)"
@@ -26,7 +27,14 @@
     imu_rot_p="$(arg imu_rot_p)"
     imu_rot_y="$(arg imu_rot_y)"
     wheel_config_path="$(arg wheel_config_path)"
-    simulation_engine="$(arg simulation_engine)" />
+    simulation_engine="$(arg simulation_engine)"
+    use_ros_control="$(arg use_ros_control)" />
 
-  <xacro:ouster.ouster_os1_32 parent_link="cover_link" xyz="0.185 0.0 0.0" rpy="0.0 0.0 0.0" />
+  <xacro:ouster.ouster_os1_32
+    parent_link="cover_link"
+    xyz="0.185 0.0 0.0"
+    rpy="0.0 0.0 0.0"
+    use_gpu="$(arg use_gpu)"
+    simulation_engine="gazebo-classic" />
+
 </robot>
