@@ -1,7 +1,7 @@
 services:
   
   panther_gazebo:
-    image: husarion/panther:noetic-simulation
+    image: husarion/panther-gazebo:noetic-nightly
     container_name: panther_gazebo
     environment:
       - DISPLAY
@@ -10,13 +10,16 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ./panther.rviz:/ros_ws/src/panther_description/rviz/panther.rviz
       - ./panther.urdf.xacro:/ros_ws/src/panther_description/urdf/panther.urdf.xacro
-    command: roslaunch panther_gazebo panther_simulation.launch
+    command: roslaunch panther_gazebo panther_simulation.launch use_gpu:=true
 
   webui-ros-joystick:
-    image: husarion/webui-ros-joystick:noetic
+    image: husarion/webui-ros-joystick:noetic-0.0.1-20230510-stable
     container_name: webui-ros-joystick
     environment:
       - ROS_MASTER_URI=http://panther_gazebo:11311
     ports:
       - 8000:8000
-    command: roslaunch webui-ros-joystick panther_webui.launch --wait
+    command: >
+      roslaunch --wait
+      webui-ros-joystick panther_webui.launch 
+      e_stop:=false
