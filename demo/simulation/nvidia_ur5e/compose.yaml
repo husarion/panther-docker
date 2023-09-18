@@ -24,7 +24,6 @@ services:
     ports:
       - 8000:8000
     command: >
-      roslaunch --wait
-      webui-ros-joystick panther_webui.launch 
-      e_stop:=false
-      cmd_vel_topic:=/panther_base_controller/cmd_vel
+      roslaunch --wait webui-ros-joystick panther_webui.launch 
+        e_stop:=false
+        cmd_vel_topic:=/panther_base_controller/cmd_vel

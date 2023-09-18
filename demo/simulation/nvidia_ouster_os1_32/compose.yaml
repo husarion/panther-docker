@@ -1,6 +1,6 @@
 services:
   panther_gazebo:
-    image: husarion/panther-gazebo:noetic-nightly
+    image: husarion/panther-gazebo:noetic-1.0.52-20230918-stable
     container_name: panther_gazebo
     runtime: nvidia
     environment:
@@ -22,6 +22,5 @@ services:
     ports:
       - 8000:8000
     command: >
-      roslaunch --wait
-      webui-ros-joystick panther_webui.launch 
-      e_stop:=false
+      roslaunch --wait webui-ros-joystick panther_webui.launch 
+        e_stop:=false

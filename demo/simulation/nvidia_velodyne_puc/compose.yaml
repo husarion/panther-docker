@@ -1,6 +1,6 @@
 services:
   panther_gazebo:
-    image: husarion/panther-gazebo:noetic-nightly
+    image: husarion/panther-gazebo:noetic-1.0.52-20230918-stable
     container_name: panther_gazebo
     runtime: nvidia
     environment:
@@ -13,11 +13,10 @@ services:
       - ./panther.urdf.xacro:/ros_ws/src/panther_description/urdf/panther.urdf.xacro
       - ./panther.rviz:/ros_ws/src/panther_description/rviz/panther.rviz
     command: > 
-      roslaunch 
-      panther_gazebo panther_simulation.launch 
-      use_gpu:=true
-      pos_y:=8.0
-      world_file:=worlds/willowgarage.world
+      roslaunch panther_gazebo panther_simulation.launch 
+        use_gpu:=true
+        pos_y:=8.0
+        world_file:=worlds/willowgarage.world
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic-0.0.1-20230510-stable
@@ -27,6 +26,5 @@ services:
     ports:
       - 8000:8000
     command: >
-      roslaunch --wait
-      webui-ros-joystick panther_webui.launch 
-      e_stop:=false
+      roslaunch --wait webui-ros-joystick panther_webui.launch 
+        e_stop:=false
