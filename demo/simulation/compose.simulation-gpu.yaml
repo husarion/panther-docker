@@ -1,7 +1,7 @@
 services:
 
   panther_gazebo:
-    image: husarion/panther-gazebo:noetic-1.0.21-20230717
+    image: husarion/panther-gazebo:noetic-1.1.0-20230918-stable
     container_name: panther_gazebo
     runtime: nvidia
     tty: true

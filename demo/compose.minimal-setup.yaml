@@ -16,7 +16,7 @@ services:
     command: roscore
 
   panther_ros:
-    image: husarion/panther:noetic-1.0.52-20230918-stable
+    image: husarion/panther:noetic-1.1.0-20230918-stable
     container_name: panther_ros
     <<: *common-config
     devices:
