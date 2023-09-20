@@ -16,7 +16,7 @@ services:
     command: roscore
 
   panther_ros:
-    image: husarion/panther:noetic-nightly
+    image: husarion/panther:noetic-1.1.0-20230920-stable
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -30,18 +30,16 @@ services:
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
-      roslaunch --wait
-      panther_bringup bringup.launch
-      exit_on_wrong_hw:=false
+      roslaunch --wait panther_bringup bringup.launch
+        exit_on_wrong_hw:=false
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic-0.0.1-20230510-stable
     container_name: webui-ros-joystick
     <<: *common-config
     command: >
-      roslaunch --wait
-      webui-ros-joystick panther_webui.launch
-      e_stop:=true
+      roslaunch --wait webui-ros-joystick panther_webui.launch
+        e_stop:=true
 
   gamepad_controller:
     image: husarion/joy2twist:noetic-1.0.0-20230728-stable
@@ -50,6 +48,5 @@ services:
     devices:
       - /dev/input/js0
     command: >
-      roslaunch --wait
-      joy2twist gamepad_controller.launch
-      joy2twist_params_file:=$$(find joy2twist)/config/joy2twist_panther.yaml
+      roslaunch --wait joy2twist gamepad_controller.launch
+        joy2twist_params_file:=$$(find joy2twist)/config/joy2twist_panther.yaml
