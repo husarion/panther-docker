@@ -1,6 +1,6 @@
 services:
   panther_gazebo:
-    image: husarion/panther-gazebo:noetic-1.1.0-20230918-stable
+    image: husarion/panther-gazebo:noetic-1.1.0-20230920-stable
     container_name: panther_gazebo
     runtime: nvidia
     environment:

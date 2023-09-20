@@ -1,14 +1,16 @@
 services:
 
   panther_gazebo:
-    image: husarion/panther-gazebo:noetic-1.1.0-20230918-stable
+    image: husarion/panther-gazebo:noetic-1.1.0-20230920-stable
     container_name: panther_gazebo
     environment:
       - DISPLAY
       - QT_X11_NO_MITSHM=1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-    command: roslaunch panther_gazebo panther_simulation.launch wheel_type:=WH02
+    command: >
+      roslaunch panther_gazebo panther_simulation.launch
+        wheel_type:=WH02
 
   webui-ros-joystick:
     image: husarion/webui-ros-joystick:noetic-0.0.1-20230510-stable
