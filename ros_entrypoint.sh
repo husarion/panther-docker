@@ -3,7 +3,7 @@ set -e
 
 # setup ros environment
 source "/opt/ros/$ROS_DISTRO/setup.bash"
-source "/ros_ws/devel/setup.bash"
+source "/ros2_ws/install/setup.bash"
 
 if [ "$HUSARION_ROS_BUILD_TYPE" = "hardware" ]; then
   # source eeprom environemnt variables

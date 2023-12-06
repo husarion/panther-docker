@@ -12,7 +12,7 @@ on:
           - development
           - stable
       target_distro:
-        description: "In case of \"stable\" release specify the ROS distro of the existing docker image (eg. noetic)"
+        description: "In case of \"stable\" release specify the ROS distro of the existing docker image (eg. humble)"
         type: string
         default: "ardent"
       target_release:
@@ -32,7 +32,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
@@ -40,11 +40,11 @@ jobs:
         include:
           - dockerfile: Dockerfile.hardware
             platforms: "linux/arm64"
-            ros_distro: "noetic"
+            ros_distro: "humnble"
           - dockerfile: Dockerfile.simulation
             repo_name: "panther-gazebo"
             platforms: "linux/amd64"
-            ros_distro: "noetic"
+            ros_distro: "humble"
 
     steps:
 
@@ -56,7 +56,7 @@ jobs:
         with:
           dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub_token:  ${{ secrets.DOCKERHUB_TOKEN }}
-          main_branch_name: ros1
+          main_branch_name: ros2-devel
           dockerfile: ${{ matrix.dockerfile }}
           repo_name: ${{ matrix.repo_name }}
           build_type: ${{ inputs.build_type }}
