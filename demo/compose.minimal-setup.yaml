@@ -5,18 +5,14 @@ x-common-config:
   ipc: host
   tty: true
   environment:
-    - ROS_IP=10.15.20.2
-    - ROS_MASTER_URI=http://10.15.20.2:11311
+    - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 
 services:
-  ros_master:
-    image: ros:noetic-ros-core
-    container_name: ros_master
-    <<: *common-config
-    command: roscore
-
   panther_ros:
-    image: husarion/panther:noetic-1.1.0-20230920-stable
+    # image: husarion/panther:humble-nightly
+    build: 
+      context: ..
+      dockerfile: Dockerfile.hardware
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -30,23 +26,16 @@ services:
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
-      roslaunch --wait panther_bringup bringup.launch
-        exit_on_wrong_hw:=false
-
-  webui-ros-joystick:
-    image: husarion/webui-ros-joystick:noetic-0.0.1-20230510-stable
-    container_name: webui-ros-joystick
-    <<: *common-config
-    command: >
-      roslaunch --wait webui-ros-joystick panther_webui.launch
-        e_stop:=true
+      ros2 launch panther_bringup bringup.launch
 
   gamepad_controller:
-    image: husarion/joy2twist:noetic-1.0.0-20230728-stable
+    image: husarion/joy2twist:humble-1.0.0-20231205
     container_name: gamepad_controller
     <<: *common-config
     devices:
       - /dev/input/js0
     command: >
-      roslaunch --wait joy2twist gamepad_controller.launch
-        joy2twist_params_file:=$$(find joy2twist)/config/joy2twist_panther.yaml
+      bash -c
+      "ros2 launch 
+      joy2twist gamepad_controller.launch.py
+      joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml"
