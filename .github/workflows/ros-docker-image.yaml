@@ -40,7 +40,7 @@ jobs:
         include:
           - dockerfile: Dockerfile.hardware
             platforms: "linux/arm64"
-            ros_distro: "humnble"
+            ros_distro: "humble"
           - dockerfile: Dockerfile.simulation
             repo_name: "panther-gazebo"
             platforms: "linux/amd64"
