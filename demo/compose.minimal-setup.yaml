@@ -23,7 +23,7 @@ services:
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     command: >
-      ros2 launch panther_bringup bringup.launch
+      ros2 launch panther_bringup bringup.launch.py
 
   gamepad_controller:
     image: husarion/joy2twist:humble-1.0.0-20231205
