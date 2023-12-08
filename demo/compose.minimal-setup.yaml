@@ -9,10 +9,7 @@ x-common-config:
 
 services:
   panther_ros:
-    # image: husarion/panther:humble-nightly
-    build: 
-      context: ..
-      dockerfile: Dockerfile.hardware
+    image: husarion/panther:humble-nightly
     container_name: panther_ros
     <<: *common-config
     devices:
