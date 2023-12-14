@@ -29,12 +29,9 @@ RUN apt-get update  && \
     git clone https://github.com/husarion/panther_ros.git src/panther_ros -b ros2-control && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
     rm -r src/panther_ros/panther_gazebo && \
-    cd src/panther_msgs && \
-    git checkout origin/ros2-control && \
-    cd /ros2_ws && \
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
-    rosdep install --from-paths src -y -i --skip-keys mecanum_drive_controller && \
+    rosdep install --from-paths src -y -i && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=$BUILD_TYPE" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic && \
     apt-get autoremove -y && \
