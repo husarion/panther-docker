@@ -26,7 +26,7 @@ RUN apt-get update  && \
         liblely-co-tools \ 
         python3-dcf-tools && \
     # ----------------------------------
-    git clone https://github.com/husarion/panther_ros.git src/panther_ros -b ros2-control && \
+    git clone https://github.com/husarion/panther_ros.git src/panther_ros -b ros2-prealpha && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
     rm -r src/panther_ros/panther_gazebo && \
     rosdep init && \
