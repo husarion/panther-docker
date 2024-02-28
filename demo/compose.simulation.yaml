@@ -1,0 +1,39 @@
+x-common-config:
+  &common-config
+  network_mode: host
+  ipc: host
+
+x-cpu-config:
+  &cpu-config
+  env_file: .env.cpu
+
+x-gpu-config:
+  &gpu-config
+  runtime: nvidia
+  env_file: .env.gpu
+
+services:
+
+  panther:
+    # image: husarion/panther-gazebo:humble-nightly
+    build:
+      context: ..
+      dockerfile: Dockerfile.simulation
+    <<:
+      - *common-config
+      - *cpu-config
+    # environment:
+    #   - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    command: >
+      ros2 launch panther_gazebo simulation.launch.py
+
+  rviz:
+    image: rviz
+    <<:
+      - *common-config
+      - *cpu-config
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./panther.rviz:/root/.rviz2/default.rviz

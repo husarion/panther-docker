@@ -1,16 +1,24 @@
 x-common-config:
   &common-config
   network_mode: host
-  restart: always
   ipc: host
-  tty: true
-  environment:
-    - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+  restart: always
+
+x-cpu-config:
+  &cpu-config
+  env_file: .env.cpu
+
+x-gpu-config:
+  &gpu-config
+  runtime: nvidia
+  env_file: .env.gpu
 
 services:
-  panther_ros:
+  panther:
     image: husarion/panther:humble-nightly
-    container_name: panther_ros
+    # build:
+    #   context: ..
+    #   dockerfile: Dockerfile.hardware
     <<: *common-config
     devices:
       - /dev/bus/usb
@@ -27,12 +35,24 @@ services:
 
   gamepad_controller:
     image: husarion/joy2twist:humble-1.0.0-20231205
-    container_name: gamepad_controller
     <<: *common-config
     devices:
       - /dev/input/js0
     command: >
       bash -c
-      "ros2 launch 
+      "ros2 launch
       joy2twist gamepad_controller.launch.py
       joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml"
+
+  rviz:
+    image: husarion/rviz2:humble-11.2.8-20231122
+    <<:
+      - *common-config
+      - *cpu-config
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ./panther.rviz:/root/.rviz2/default.rviz
+    environment:
+      - DISPLAY=${DISPLAY:?You need to define display env}
+      - LIBGL_ALWAYS_SOFTWARE=1
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
