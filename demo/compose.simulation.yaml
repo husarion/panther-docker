@@ -30,7 +30,7 @@ services:
       ros2 launch panther_gazebo simulation.launch.py
 
   rviz:
-    image: rviz
+    image: husarion/rviz2:humble-11.2.8-20231122
     <<:
       - *common-config
       - *cpu-config
