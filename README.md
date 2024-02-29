@@ -52,7 +52,7 @@ Depending on your hardware configuration your `compose.yaml` file may differ. Fo
 To launch the simulation, from the directory containing Docker compose file run:
 
 ```bash
-  docker compose -f compose.simulation.yaml up
+docker compose -f compose.simulation.yaml up
 ```
 
 Nvidia users have to install NVIDIA Container Toolkit. Installation steps can be found [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed following Docker compose file will be needed: [compose.simulation-gpu.yaml](./demo/simulation/compose.simulation-gpu.yaml).

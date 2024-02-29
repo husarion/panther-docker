@@ -9,7 +9,7 @@ WORKDIR /ros2_ws
 RUN apt-get update  && \
     apt-get install -y \
         ros-dev-tools && \
-    git clone -b ros2-dependencies https://github.com/husarion/panther_ros.git src/panther_ros && \
+    git clone -b ros2-devel https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
     vcs import src < src/panther_ros/panther/panther_simulation.repos && \
     rosdep init && \
