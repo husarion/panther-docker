@@ -13,6 +13,7 @@ x-gpu-config:
   runtime: nvidia
   env_file: .env.gpu
 
+services:
   rviz:
     image: husarion/rviz2:humble
     <<:

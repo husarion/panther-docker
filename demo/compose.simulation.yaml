@@ -13,7 +13,6 @@ x-gpu-config:
   env_file: .env.gpu
 
 services:
-
   panther:
     image: husarion/panther-gazebo:humble
     # build:
