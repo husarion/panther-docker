@@ -15,10 +15,10 @@ x-gpu-config:
 
 services:
   panther:
-    image: husarion/panther:humble
-    # build:
-    #   context: ..
-    #   dockerfile: Dockerfile.hardware
+    # image: husarion/panther:humble
+    build:
+      context: ..
+      dockerfile: Dockerfile.hardware
     <<: *common-config
     devices:
       - /dev/bus/usb
@@ -30,6 +30,14 @@ services:
       - /sys/bus/iio/devices:/sys/bus/iio/devices
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
+    # Realtime hardware (https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html#determinism)
+    ulimits:
+      rtprio:
+        soft: 99
+        hard: 99
+      memlock:
+        soft: 102400
+        hard: 102400
     command: >
       ros2 launch panther_bringup bringup.launch.py
 
@@ -43,12 +51,3 @@ services:
       "ros2 launch
       joy2twist gamepad_controller.launch.py
       joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml"
-
-  rviz:
-    image: husarion/rviz2:humble-11.2.8-20231122
-    <<:
-      - *common-config
-      - *cpu-config
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ./panther.rviz:/root/.rviz2/default.rviz

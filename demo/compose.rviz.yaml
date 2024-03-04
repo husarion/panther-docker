@@ -2,6 +2,7 @@ x-common-config:
   &common-config
   network_mode: host
   ipc: host
+  restart: always
 
 x-cpu-config:
   &cpu-config
@@ -12,17 +13,11 @@ x-gpu-config:
   runtime: nvidia
   env_file: .env.gpu
 
-services:
-
-  panther:
-    image: husarion/panther-gazebo:humble
-    # build:
-    #   context: ..
-    #   dockerfile: Dockerfile.simulation
+  rviz:
+    image: husarion/rviz2:humble
     <<:
       - *common-config
       - *cpu-config
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-    command: >
-      ros2 launch panther_gazebo simulation.launch.py
+      - ./panther.rviz:/root/.rviz2/default.rviz
