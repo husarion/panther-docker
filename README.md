@@ -53,7 +53,7 @@ To give Docker access to your screen run:
 
 ```bash
 xhost local:docker
-docker compose -f compose.gazebo.yaml up
+docker compose -f compose.simulation.yaml up
 ```
 
 > [!NOTE]

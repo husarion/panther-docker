@@ -4,7 +4,7 @@ x-common-config:
   ipc: host
   restart: always
   environment:
-    - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # TODO: Fix Default FastDDS
+    - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
 
 x-cpu-config:
   &cpu-config
