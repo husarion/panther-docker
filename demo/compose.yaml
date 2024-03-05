@@ -3,6 +3,8 @@ x-common-config:
   network_mode: host
   ipc: host
   restart: always
+  environment:
+    - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # TODO: Fix Default FastDDS
 
 x-cpu-config:
   &cpu-config

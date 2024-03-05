@@ -2,6 +2,8 @@ x-common-config:
   &common-config
   network_mode: host
   ipc: host
+  environment:
+    - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # TODO: Fix Default FastDDS
 
 x-cpu-config:
   &cpu-config
@@ -14,7 +16,7 @@ x-gpu-config:
 
 services:
   panther:
-    image: husarion/panther-gazebo:humble
+    image: husarion/panther-gazebo:humble-ros2-update
     # build:
     #   context: ..
     #   dockerfile: Dockerfile.simulation

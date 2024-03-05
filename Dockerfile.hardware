@@ -40,4 +40,3 @@ RUN apt-get update  && \
 
 # Setup envs from eeprom
 RUN sed -i "/# <additional-user-commands>/i set -e -a && source /run/husarion/panther_config.env" /*_entrypoint.sh
-ENTRYPOINT ["/ros_entrypoint.sh"]

@@ -4,7 +4,7 @@ Docker images dedicated to Husarion Panther ROS system and simulation.
 
 ## Docker Images
 
-Docker images are automatically deployed to Docker Hub. Image tag includes information about the ROS distribution, the version of the [panther_ros](https://github.com/husarion/panther_ros/tree/ros2-devel) repository, and the date of release. Additionally stable image versions are  tagged with `stable` and recommended for production use.
+Docker images are automatically deployed to Docker Hub. Image tag includes information about the ROS distribution, the version of the [panther_ros](https://github.com/husarion/panther_ros/tree/ros2-devel) repository, and the date of release. Additionally stable image versions are tagged with `stable` and recommended for production use.
 Below, you can find a list of available Docker images. To access the latest tag, simply follow provided links:
 
 - [husarion/panther](https://hub.docker.com/r/husarion/panther) - ROS packages for Panther robot,
@@ -12,8 +12,7 @@ Below, you can find a list of available Docker images. To access the latest tag,
 
 ## Updating Panther Software
 
-> **Note**
-> Latest Panther Docker images are compatible with Built-in Computer OS version 2.0.0 and newer. If your operating system is older, please ensure you update it before proceeding. **[COMING SOON]** Follow [operating system reinstallation](ros2-os-instalation-link) for more info.
+> [!Note] Latest Panther Docker images are compatible with Built-in Computer OS version 2.0.0 and newer. If your operating system is older, please ensure you update it before proceeding. **[COMING SOON]** Follow [operating system reinstallation](ros2-os-instalation-link) for more info.
 
 Connect to Panther's Built-in Computer:
 
@@ -21,43 +20,41 @@ Connect to Panther's Built-in Computer:
 ssh husarion@10.15.20.2
 ```
 
-Edit Docker compose file:
+## Quick Start
+
+Depending on your needs, you can run Docker to quickly launch the physical robot or run a simulation. To do this, clone this repository to your robot or computer.
 
 ```bash
-nano compose.yaml
+git clone -b ros2 https://github.com/husarion/panther-docker.git
+cd panther-docker/demo
 ```
 
-Update Docker image tag:
+### 🤖 Robot
 
-```yaml
-  panther_ros:
-    image: husarion/panther:<newest-stable-tag> # example tag: humble-2.0.0-20231208-stable
-```
+1. Activate Panther
 
-Restart Docker containers:
+   ```bash
+   docker compose up
+   ```
 
-```bash
-docker compose up -d --force-recreate
-```
+2. Launch Visualization on PC
 
-## Running Simulation
+   ```bash
+   xhost local:root
+   docker compose -f compose.rviz.yaml up
+   ```
+
+> [!NOTE]
+> To use the latest version of the image, run the `docker compose pull` command and rerun above commands.
+
+### 💻 Gazebo Simulation
 
 To give Docker access to your screen run:
 
 ```bash
 xhost local:docker
+docker compose -f compose.gazebo.yaml up
 ```
 
-Depending on your hardware configuration your `compose.yaml` file may differ. For Intel and AMD users you will need the following configuration: [compose.simulation.yaml](./demo/simulation/compose.simulation.yaml).
-To launch the simulation, from the directory containing Docker compose file run:
-
-```bash
-docker compose -f compose.simulation.yaml up
-```
-
-Nvidia users have to install NVIDIA Container Toolkit. Installation steps can be found [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed following Docker compose file will be needed: [compose.simulation-gpu.yaml](./demo/simulation/compose.simulation-gpu.yaml).
-To launch the simulation, from the directory containing Docker compose file run:
-
-```bash
-docker compose -f compose.simulation-gpu.yaml up
-```
+> [!NOTE]
+> If you have an NVIDIA GPU, it is worth changing the compos configuration from cpu-config to gpu-config. For this purpose, it is necessary to install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed following Docker compose file will be needed: [compose.simulation-gpu.yaml](./demo/simulation/compose.simulation-gpu.yaml).
