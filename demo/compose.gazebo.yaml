@@ -16,7 +16,7 @@ x-gpu-config:
 
 services:
   panther:
-    image: husarion/panther-gazebo:humble-ros2-update
+    image: husarion/panther-gazebo:humble
     # build:
     #   context: ..
     #   dockerfile: Dockerfile.simulation

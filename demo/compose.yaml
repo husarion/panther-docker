@@ -17,10 +17,10 @@ x-gpu-config:
 
 services:
   panther:
-    # image: husarion/panther:humble
-    build:
-      context: ..
-      dockerfile: Dockerfile.hardware
+    image: husarion/panther:humble
+    # build:
+    #   context: ..
+    #   dockerfile: Dockerfile.hardware
     <<: *common-config
     devices:
       - /dev/bus/usb
