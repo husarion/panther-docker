@@ -8,24 +8,16 @@ WORKDIR /ros2_ws
 
 RUN apt-get update  && \
     apt-get install -y \
-        ros-dev-tools \
-        # required for lely installation
-        software-properties-common && \
-    # ----------------------------------
-    # Install Lely CANOpen - later to be removed
-    add-apt-repository ppa:lely/ppa && \
-    apt-get update  && \
-    apt-get install -y \
-        liblely-coapp-dev \
-        liblely-co-tools \
-        python3-dcf-tools && \
-    # ----------------------------------
+        ros-dev-tools && \
+    # Setup workspace
     git clone -b ros2-devel https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
     rm -r src/panther_ros/panther_gazebo && \
+    # Install dependencies
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install --from-paths src -y -i --skip-keys mecanum_drive_controller && \
+    # Build
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --cmake-args "-DCMAKE_BUILD_TYPE=$BUILD_TYPE" "-DBUILD_TESTING=OFF" && \
     # Get version
