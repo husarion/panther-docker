@@ -57,4 +57,4 @@ docker compose -f compose.simulation.yaml up
 ```
 
 > [!NOTE]
-> If you have an NVIDIA GPU, it is worth changing the compos configuration from cpu-config to gpu-config. For this purpose, it is necessary to install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed following Docker compose file will be needed: [compose.simulation-gpu.yaml](./demo/simulation/compose.simulation-gpu.yaml).
+> If you have an NVIDIA GPU, it is worth changing the compos configuration from cpu-config to gpu-config. For this purpose, it is necessary to install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed following Docker compose file will be needed: [compose.simulation.yaml](./demo/compose.simulation.yaml).
