@@ -12,10 +12,10 @@ RUN apt-get update  && \
     git clone -b ros2-devel https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
     vcs import src < src/panther_ros/panther/panther_simulation.repos && \
-    rm -rf src/panther_ros/panther_hardware_interfaces && \
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install --from-paths src -y -i && \
+    rm -rf src/panther_ros/panther_hardware_interfaces && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
     # Get version
