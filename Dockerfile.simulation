@@ -17,7 +17,7 @@ RUN apt-get update  && \
     rosdep update --rosdistro $ROS_DISTRO && \
     rosdep install --from-paths src -y -i && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
-    colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=$BUILD_TYPE" "-DBUILD_TESTING=OFF" && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF && \
     # Get version
     echo $(cat /ros2_ws/src/panther_ros/panther/package.xml | grep '<version>' | sed -r 's/.*<version>([0-9]+.[0-9]+.[0-9]+)<\/version>/\1/g') >> /version.txt && \
     # Size optimalization
