@@ -16,7 +16,6 @@ RUN apt-get update  && \
     vcs import src < src/panther_ros/panther/panther_simulation.repos && \
     rm -rf src/panther_ros/panther_battery && \
     rm -rf src/panther_ros/panther_hardware_interfaces && \
-    rm -rf src/panther_ros/panther_lights && \
     # Install dependencies
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
