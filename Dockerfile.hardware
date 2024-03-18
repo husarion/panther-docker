@@ -1,6 +1,7 @@
-FROM ros:humble-ros-core
+ARG ROS_DISTRO=humble
+ARG BUILD_TEST=OFF
 
-SHELL ["/bin/bash", "-c"]
+FROM husarnet/ros:${ROS_DISTRO}-ros-core
 
 ENV HUSARION_ROS_BUILD_TYPE=hardware
 
@@ -8,40 +9,27 @@ WORKDIR /ros2_ws
 
 RUN apt-get update  && \
     apt-get install -y \
-        git \
-        python3-dev \
-        python3-pip \
-        python3-colcon-common-extensions \
-        # required for lely instalation
-        software-properties-common && \
-    pip3 install \
-        rosdep \
-        vcstool && \
-    # ----------------------------------
-    # Install Lely CANOpen - later to be removed
-    add-apt-repository ppa:lely/ppa && \
-    apt-get update  && \
-    apt-get install -y \
-        liblely-coapp-dev \ 
-        liblely-co-tools \ 
-        python3-dcf-tools && \
-    # ----------------------------------
-    git clone https://github.com/husarion/panther_ros.git src/panther_ros -b ros2-control && \
+        ros-dev-tools && \
+    # Setup workspace
+    git clone -b ros2-devel https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
-    rm -r src/panther_ros/panther_gazebo && \
-    cd src/panther_msgs && \
-    git checkout origin/ros2-control && \
-    cd /ros2_ws && \
+    # Install dependencies
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
-    rosdep install --from-paths src -y -i --skip-keys mecanum_drive_controller && \
+    rosdep install --from-paths src -y -i && \
+    # Build
     source /opt/ros/$ROS_DISTRO/setup.bash && \
-    colcon build --symlink-install --cmake-args "-DCMAKE_BUILD_TYPE=$BUILD_TYPE" "-DCMAKE_EXPORT_COMPILE_COMMANDS=On" -Wall -Wextra -Wpedantic && \
+    colcon build --symlink-install --packages-up-to panther --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=$BUILD_TEST && \
+    # Get version
+    echo $(cat /ros2_ws/src/panther_ros/panther/package.xml | grep '<version>' | sed -r 's/.*<version>([0-9]+.[0-9]+.[0-9]+)<\/version>/\1/g') >> /version.txt && \
+    # Size optimalization
+    rm -rf build log && \
+    export SUDO_FORCE_REMOVE=yes && \
+    apt-get remove -y \
+        ros-dev-tools && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN echo $(cat /ros2_ws/src/panther_ros/panther/package.xml | grep '<version>' | sed -r 's/.*<version>([0-9]+.[0-9]+.[0-9]+)<\/version>/\1/g') >> /version.txt
-
-COPY ./ros_entrypoint.sh / 
-ENTRYPOINT ["/ros_entrypoint.sh"]
+# Setup envs from eeprom
+RUN sed -i "/# <additional-user-commands>/i set -e -a && source /run/husarion/panther_config.env" /*_entrypoint.sh

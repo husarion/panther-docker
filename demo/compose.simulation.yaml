@@ -16,12 +16,13 @@ x-gpu-config:
   env_file: .env.gpu
 
 services:
-  rviz:
-    image: husarion/rviz2:humble
-    container_name: rviz2
+  panther_gazebo:
+    image: husarion/panther-gazebo:humble
+    container_name: panther_gazebo
     <<:
       - *common-config
       - *cpu-config
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      - ./panther.rviz:/root/.rviz2/default.rviz
+    command: >
+      ros2 launch panther_gazebo simulation.launch.py
