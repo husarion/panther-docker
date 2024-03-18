@@ -16,7 +16,7 @@ RUN apt-get update  && \
     # Install dependencies
     rosdep init && \
     rosdep update --rosdistro $ROS_DISTRO && \
-    rosdep install --from-paths src -y -i --skip-keys mecanum_drive_controller && \
+    rosdep install --from-paths src -y -i && \
     # Build
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     colcon build --symlink-install --packages-up-to panther --cmake-args -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=$BUILD_TEST && \
