@@ -34,7 +34,7 @@ cd panther-docker/demo
 1. Activate Panther
 
    ```bash
-   docker compose up
+   docker compose -f compose.minimal-setup.yaml up
    ```
 
 2. Launch Visualization on PC

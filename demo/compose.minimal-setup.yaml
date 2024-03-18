@@ -5,13 +5,12 @@ x-common-config:
   restart: always
   environment:
     - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
+    - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 
 services:
-  panther:
+  panther_ros:
     image: husarion/panther:humble
-    # build:
-    #   context: ..
-    #   dockerfile: Dockerfile.hardware
+    container_name: panther_ros
     <<: *common-config
     devices:
       - /dev/bus/usb
@@ -36,6 +35,7 @@ services:
 
   gamepad_controller:
     image: husarion/joy2twist:humble-1.0.0-20231205
+    container_name: gamepad_controller
     <<: *common-config
     devices:
       - /dev/input/js0
