@@ -18,7 +18,7 @@ x-gpu-config:
 services:
   rviz:
     image: husarion/rviz2:humble
-    container_name: panther_ros
+    container_name: rviz2
     <<:
       - *common-config
       - *cpu-config
