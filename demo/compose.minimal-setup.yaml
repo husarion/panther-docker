@@ -9,7 +9,7 @@ x-common-config:
 
 services:
   panther_ros:
-    image: husarion/panther:humble
+    image: husarion/panther:humble-ros2-devel
     container_name: panther_ros
     <<: *common-config
     devices:
