@@ -9,7 +9,7 @@ x-common-config:
 
 services:
   panther_ros:
-    image: husarion/panther:humble
+    image: husarion/panther:humble-ros2-devel
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -31,7 +31,7 @@ services:
         soft: 102400
         hard: 102400
     command: >
-      ros2 launch panther_bringup bringup.launch.py
+      ros2 launch panther_bringup bringup.launch.py namespace:=panther
 
   gamepad_controller:
     image: husarion/joy2twist:humble-1.0.0-20231205
