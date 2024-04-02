@@ -9,7 +9,7 @@ x-common-config:
 
 services:
   panther_ros:
-    image: husarion/panther:humble-ros2-devel
+    image: husarion/panther:humble-2.0.0-20240402
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -44,3 +44,4 @@ services:
       "ros2 launch
       joy2twist gamepad_controller.launch.py
       joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml"
+      namespace:=panther
