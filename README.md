@@ -12,7 +12,8 @@ Below, you can find a list of available Docker images. To access the latest tag,
 
 ## Updating Panther Software
 
-> [!Note] Latest Panther Docker images are compatible with Built-in Computer OS version 2.0.0 and newer. If your operating system is older, please ensure you update it before proceeding. **[COMING SOON]** Follow [operating system reinstallation](ros2-os-instalation-link) for more info.
+> [!Note]
+> Latest Panther Docker images are compatible with Built-in Computer OS version 2.0.0 and newer. If your operating system is older, please ensure you update it before proceeding. **[COMING SOON]** Follow [operating system reinstallation](ros2-os-instalation-link) for more info.
 
 Connect to Panther's Built-in Computer:
 
