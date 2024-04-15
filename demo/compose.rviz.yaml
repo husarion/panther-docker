@@ -17,7 +17,7 @@ x-gpu-config:
 
 services:
   rviz:
-    image: husarion/rviz2:humble
+    image: husarion/rviz2:humble-nightly
     container_name: rviz2
     <<:
       - *common-config
@@ -25,3 +25,4 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ./panther.rviz:/root/.rviz2/default.rviz
+    stop_signal: SIGINT

@@ -17,12 +17,13 @@ x-gpu-config:
 
 services:
   panther_gazebo:
-    image: husarion/panther-gazebo:humble
+    image: husarion/panther-gazebo:humble-2.0.0-20240402
     container_name: panther_gazebo
     <<:
       - *common-config
       - *cpu-config
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    stop_signal: SIGINT
     command: >
       ros2 launch panther_gazebo simulation.launch.py

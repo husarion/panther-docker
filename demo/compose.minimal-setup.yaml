@@ -30,6 +30,7 @@ services:
       memlock:
         soft: 102400
         hard: 102400
+    stop_signal: SIGINT
     command: >
       ros2 launch panther_bringup bringup.launch.py namespace:=panther
 
@@ -39,6 +40,7 @@ services:
     <<: *common-config
     devices:
       - /dev/input/js0
+    stop_signal: SIGINT
     command: >
       bash -c
       "ros2 launch
