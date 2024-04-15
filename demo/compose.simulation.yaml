@@ -24,6 +24,5 @@ services:
       - *cpu-config
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-    stop_signal: SIGINT
     command: >
       ros2 launch panther_gazebo simulation.launch.py

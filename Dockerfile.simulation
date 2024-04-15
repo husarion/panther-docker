@@ -5,6 +5,8 @@ FROM husarnet/ros:${ROS_DISTRO}-ros-core
 
 ENV HUSARION_ROS_BUILD_TYPE=simulation
 
+STOPSIGNAL SIGINT
+
 WORKDIR /ros2_ws
 
 RUN apt-get update  && \
