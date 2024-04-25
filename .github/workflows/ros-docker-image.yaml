@@ -16,7 +16,7 @@ on:
         description: In case of "stable" release specify the ROS distro of the existing docker image (eg.
           humble)
         type: string
-        default: ardent
+        default: humble
       target_release:
         description: In case of "stable" release specify the version of the existing docker image (eg.
           1.0.12)
@@ -27,12 +27,13 @@ on:
           YYYYMMDD (eg. 20220124)
         type: string
         default: '20131206'
-  repository_dispatch:
-    types: [rebuild, ros-package-update]
-  pull_request:
-    types:
-      - closed
-      - opened
+  # TODO: disabled when creating the release pipeline
+  # repository_dispatch:
+    # types: [rebuild, ros-package-update]
+  # pull_request:
+    # types:
+      # - closed
+      # - opened
 
 jobs:
   build:
