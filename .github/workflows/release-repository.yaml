@@ -35,21 +35,29 @@ jobs:
               with:
                   ref: ${{ github.event.inputs.target_branch }}
 
-            - name: Create release branch
-              run: |
-                  git checkout -b $RELEASE_BRANCH
-                  git push -u origin $RELEASE_BRANCH
+            # - name: Create release branch
+            #   run: |
+            #       git checkout -b $RELEASE_BRANCH
+            #       git push -u origin $RELEASE_BRANCH
 
             - name: Update docker image version
               uses: mikefarah/yq@v4.43.1
               with:
                   cmd: yq -i '.services.panther_ros.image = "new_tag"' demo/compose.minimal-setup.yaml
 
-            - name: Commit changes
-              run: |
-                  git add .
-                  git commit -m "Update docker image version"
-                  git push origin $RELEASE_BRANCH
+            # - name: Commit changes
+            #   run: |
+            #       git add .
+            #       git commit -m "Update docker image version"
+            #       git push origin $RELEASE_BRANCH
+
+            - name: Commit changes to release branch
+              uses: EndBug/add-and-commit@v9
+              with:
+                  message: Update docker image version
+                  author_name: action-bot
+                  author_email: action-bot@action-bot.com
+                  new_branch: $RELEASE_BRANCH
 
             - name: Create pull request
               run: |
