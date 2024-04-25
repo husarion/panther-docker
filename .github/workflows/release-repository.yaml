@@ -43,7 +43,7 @@ jobs:
               uses: mikefarah/yq@v4.43.1
               with:
                   cmd: |
-                      yq -i '.services.panther_ros.image = " husarion/panther:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
+                      yq -i '.services.panther_ros.image = "husarion/panther:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
                       yq -i '.services.panther_gazebo.image = "husarion/panther-gazebo:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
 
             - name: Commit changes to release branch
