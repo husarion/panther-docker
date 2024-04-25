@@ -8,7 +8,10 @@ on:
                 description: Target branch for the release.
                 required: true
             version:
-                description: New version (used for tag and package versioning).
+                description: New version (used for tag).
+                required: true
+            image_timestamp:
+                description: Timestamp of the image to be used in the compose files.
                 required: true
             release_name:
                 description: Name of the release to be created. Version in the first place is recommended (e.g. `2.0.0-alpha`).
@@ -29,27 +32,19 @@ jobs:
         env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             RELEASE_BRANCH: release-${{ github.event.inputs.version }}
+            DOCKER_IMAGE: husarion/panther-gazebo:humble-${{ github.event.inputs.version }}-${{ github.event.inputs.image_timestamp }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
               with:
                   ref: ${{ github.event.inputs.target_branch }}
 
-            # - name: Create release branch
-            #   run: |
-            #       git checkout -b $RELEASE_BRANCH
-            #       git push -u origin $RELEASE_BRANCH
-
             - name: Update docker image version
               uses: mikefarah/yq@v4.43.1
               with:
-                  cmd: yq -i '.services.panther_ros.image = "new_tag"' demo/compose.minimal-setup.yaml
-
-            # - name: Commit changes
-            #   run: |
-            #       git add .
-            #       git commit -m "Update docker image version"
-            #       git push origin $RELEASE_BRANCH
+                  cmd: |
+                      yq -i '.services.panther_ros.image = "${{ env.DOCKER_IMAGE }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
+                      yq -i '.services.panther_gazebo.image = "${{ env.DOCKER_IMAGE }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
 
             - name: Commit changes to release branch
               uses: EndBug/add-and-commit@v9
