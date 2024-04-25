@@ -43,7 +43,7 @@ jobs:
             - name: Update docker image version
               uses: mikefarah/yq@v4.43.1
               with:
-                  cmd: yq -i '.services.panther_ros.image = new_tag' demo/compose.minimal-setup.yaml
+                  cmd: yq -i '.services.panther_ros.image = \"new_tag\"' demo/compose.minimal-setup.yaml
 
             - name: Create pull request
               run: |
