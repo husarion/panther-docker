@@ -45,6 +45,12 @@ jobs:
               with:
                   cmd: yq -i '.services.panther_ros.image = "new_tag"' demo/compose.minimal-setup.yaml
 
+            - name: Commit changes
+              run: |
+                  git add .
+                  git commit -m "Update docker image version"
+                  git push origin $RELEASE_BRANCH
+
             - name: Create pull request
               run: |
                   gh pr create \
