@@ -42,7 +42,6 @@ services:
     stop_signal: SIGINT
     command: >
       bash -c
-      "ros2 launch
-      joy2twist gamepad_controller.launch.py
-      joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml"
-      namespace:=panther
+      "ros2 launch joy2twist gamepad_controller.launch.py
+        joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml
+        namespace:=panther"
