@@ -57,7 +57,7 @@ jobs:
                   message: Update docker image version
                   author_name: action-bot
                   author_email: action-bot@action-bot.com
-                  new_branch: $RELEASE_BRANCH
+                  new_branch: ${{ RELEASE_BRANCH }}
 
             - name: Create pull request
               run: |
