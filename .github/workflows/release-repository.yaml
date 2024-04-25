@@ -32,7 +32,7 @@ jobs:
         env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             RELEASE_BRANCH: release-${{ github.event.inputs.version }}
-            DOCKER_IMAGE: husarion/panther-gazebo:humble-${{ github.event.inputs.version }}-${{ github.event.inputs.image_timestamp }}
+            DOCKER_IMAGE_TAG: humble-${{ github.event.inputs.version }}-${{ github.event.inputs.image_timestamp }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -43,8 +43,8 @@ jobs:
               uses: mikefarah/yq@v4.43.1
               with:
                   cmd: |
-                      yq -i '.services.panther_ros.image = "${{ env.DOCKER_IMAGE }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
-                      yq -i '.services.panther_gazebo.image = "${{ env.DOCKER_IMAGE }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
+                      yq -i '.services.panther_ros.image = " husarion/panther:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
+                      yq -i '.services.panther_gazebo.image = "husarion/panther-gazebo:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
 
             - name: Commit changes to release branch
               uses: EndBug/add-and-commit@v9
