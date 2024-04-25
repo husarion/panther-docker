@@ -28,20 +28,17 @@ jobs:
         runs-on: ubuntu-22.04
         env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            RELEASE_BRANCH: release-${{ github.event.inputs.version }}
         steps:
             - name: Checkout
               uses: actions/checkout@v4
               with:
                   ref: ${{ github.event.inputs.target_branch }}
 
-            - name: Create release candidate
-              id: create_release_candidate
-              uses: at-wat/catkin-release-action@v1
-              with:
-                  version: ${{ github.event.inputs.version }}
-                  git_user: action-bot
-                  git_email: action-bot@action-bot.com
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Create release branch
+              run: |
+                  git checkout -b $RELEASE_BRANCH
+                  git push -u origin $RELEASE_BRANCH
 
             - name: Update docker image version
               uses: mikefarah/yq@v4.43.1
@@ -52,27 +49,27 @@ jobs:
               run: |
                   gh pr create \
                   --base ${{ github.event.inputs.target_branch }} \
-                  --head ${{ steps.create_release_candidate.outputs.created_branch }} \
-                  --title "Release ${{ steps.create_release_candidate.outputs.version}}" \
+                  --head $RELEASE_BRANCH \
+                  --title "Release ${{ github.event.inputs.version }}" \
                   --body "This PR incorporates package(s) version and changelog update."
 
             - name: Merge pull request
               if: ${{ github.event.inputs.automatic_mode == true }}
               run: |
-                  gh pr merge ${{ steps.create_release_candidate.outputs.created_branch }} \
+                  gh pr merge $RELEASE_BRANCH \
                   --delete-branch
 
             - name: Create tag
               if: ${{ github.event.inputs.automatic_mode == true }}
               run: |
                   git checkout ${{ github.event.inputs.target_branch }}
-                  git tag ${{ steps.create_release_candidate.outputs.version }}
-                  git push origin ${{ steps.create_release_candidate.outputs.version }}
+                  git tag ${{ github.event.inputs.version }}
+                  git push origin ${{ github.event.inputs.version }}
 
             - name: Create prerelease
               if: ${{ github.event.inputs.automatic_mode == true && github.event.inputs.prerelease == true}}
               run: |
-                  gh release create ${{ steps.create_release_candidate.outputs.version }} \
+                  gh release create ${{ github.event.inputs.version }} \
                   --title ${{ github.event.inputs.release_name }} \
                   --notes-from-tag \
                   --prerelease
@@ -80,6 +77,6 @@ jobs:
             - name: Create release
               if: ${{ github.event.inputs.automatic_mode == true && github.event.inputs.prerelease == false}}
               run: |
-                  gh release create ${{ steps.create_release_candidate.outputs.version }} \
+                  gh release create ${{ github.event.inputs.version }} \
                   --title ${{ github.event.inputs.release_name }} \
                   --notes-from-tag
