@@ -4,8 +4,8 @@ Docker images dedicated to Husarion Panther ROS system and simulation.
 
 ## Docker Images
 
-Docker images are automatically deployed to Docker Hub. Image tag includes information about the ROS distribution, the version of the [panther_ros](https://github.com/husarion/panther_ros/tree/ros2-devel) repository, and the date of release. Additionally stable image versions are tagged with `stable` and recommended for production use.
-Below, you can find a list of available Docker images. To access the latest tag, simply follow provided links:
+Docker images are automatically deployed to Docker Hub. The image tag includes information about the ROS distribution, the version of the [panther_ros](https://github.com/husarion/panther_ros/tree/ros2) repository, and the date of release. Additionally, stable image versions are tagged with `stable` and recommended for production use.
+Below, you can find a list of available Docker images. To access the latest tag, simply follow the provided links:
 
 - [husarion/panther](https://hub.docker.com/r/husarion/panther) - ROS packages for Panther robot,
 - [husarion/panther-gazebo](https://hub.docker.com/r/husarion/panther-gazebo) - Simulation for Panther robot in Gazebo-classic.
