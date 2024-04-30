@@ -60,7 +60,7 @@ jobs:
                   --base ${{ github.event.inputs.target_branch }} \
                   --head $RELEASE_BRANCH \
                   --title "Release ${{ github.event.inputs.version }}" \
-                  --body "This PR incorporates package(s) version and changelog update."
+                  --body "This PR incorporates tag(s) update in docker compose files."
 
             - name: Merge pull request
               if: ${{ github.event.inputs.automatic_mode == true }}
