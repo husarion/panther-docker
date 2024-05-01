@@ -11,7 +11,7 @@ x-gpu-config: &gpu-config
   env_file: .env.gpu
 services:
   panther_gazebo:
-    image: husarion/panther-gazebo:humble-2.0.1-20240430
+    image: husarion/panther-gazebo:humble-2.0.1-20240430-stable
     container_name: panther_gazebo
     <<:
       - *common-config
