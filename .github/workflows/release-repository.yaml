@@ -82,7 +82,7 @@ jobs:
                   --base ${{ env.MAIN_BRANCH }} \
                   --head ${{ github.event.inputs.target_branch }} \
                   --title "Release ${{ steps.create_release_candidate.outputs.version}} to ${{ env.MAIN_BRANCH }}" \
-                  --body "This PR incorporates package(s) version and changelog update."
+                  --body "This PR incorporates tag(s) update in docker compose files."
 
             - name: Merge pull request to main
               if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode) == true }}
