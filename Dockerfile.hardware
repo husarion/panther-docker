@@ -13,7 +13,7 @@ RUN apt-get update  && \
     apt-get install -y \
         ros-dev-tools && \
     # Setup workspace
-    git clone -b ros2-control-fix https://github.com/husarion/panther_ros.git src/panther_ros && \
+    git clone -b ros2 https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther_hardware.repos && \
     cp -r src/ros2_controllers/diff_drive_controller src && \
     cp -r src/ros2_controllers/imu_sensor_broadcaster src && \
