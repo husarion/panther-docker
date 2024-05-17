@@ -2,107 +2,113 @@
 name: Release repository
 
 on:
-    workflow_dispatch:
-        inputs:
-            target_branch:
-                description: Target branch for the release.
-                required: true
-            version:
-                description: New version (used for tag).
-                required: true
-            date:
-                description: Date stamp of the image to be used in the compose files.
-                required: true
-            release_name:
-                description: Name of the release to be created. Version in the first place is recommended (e.g. `2.0.0-alpha`).
-                required: true
-            automatic_mode:
-                type: boolean
-                default: false
-                description: Automatically merge PR and create release.
-            prerelease:
-                type: boolean
-                default: false
-                description: Mark the release as a prerelease.
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: Target branch for the release.
+        required: true
+      version:
+        description: New version (used for tag).
+        required: true
+      date:
+        description: Date stamp of the image to be used in the compose files.
+        required: true
+      release_name:
+        description: Name of the release to be created. Version in the first place is recommended (e.g.
+          `2.0.0-alpha`).
+        required: true
+      automatic_mode:
+        type: boolean
+        default: false
+        description: Automatically merge PR and create release.
+      prerelease:
+        type: boolean
+        default: false
+        description: Mark the release as a prerelease.
 
 jobs:
-    release:
-        name: Release repository
-        runs-on: ubuntu-22.04
-        env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            RELEASE_BRANCH: release-${{ github.event.inputs.version }}
-            DOCKER_IMAGE_TAG: humble-${{ github.event.inputs.version }}-${{ github.event.inputs.date }}-stable
-            MAIN_BRANCH: ros2
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ github.event.inputs.target_branch }}
+  release:
+    name: Release repository
+    runs-on: ubuntu-22.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_BRANCH: release-${{ github.event.inputs.version }}
+      DOCKER_IMAGE_TAG: humble-${{ github.event.inputs.version }}-${{ github.event.inputs.date }}-stable
+      MAIN_BRANCH: ros2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.target_branch }}
 
-            - name: Update docker image version
-              uses: mikefarah/yq@v4.43.1
-              with:
-                  cmd: |
-                      yq -i '.services.panther_ros.image = "husarion/panther:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
-                      yq -i '.services.panther_gazebo.image = "husarion/panther-gazebo:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
+      - name: Update docker image version
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: |
+            yq -i '.services.panther_ros.image = "husarion/panther:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
+            yq -i '.services.panther_gazebo.image = "husarion/panther-gazebo:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
 
-            - name: Commit changes to release branch
-              uses: EndBug/add-and-commit@v9
-              with:
-                  message: Update docker image version
-                  author_name: action-bot
-                  author_email: action-bot@action-bot.com
-                  new_branch: ${{ env.RELEASE_BRANCH }}
+      - name: Commit changes to release branch
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: Update docker image version
+          author_name: action-bot
+          author_email: action-bot@action-bot.com
+          new_branch: ${{ env.RELEASE_BRANCH }}
 
-            - name: Create pull request
-              run: |
-                  gh pr create \
-                  --base ${{ github.event.inputs.target_branch }} \
-                  --head $RELEASE_BRANCH \
-                  --title "Release ${{ github.event.inputs.version }}" \
-                  --body "This PR incorporates tag(s) update in docker compose files."
+      - name: Create pull request
+        run: |
+          gh pr create \
+          --base ${{ github.event.inputs.target_branch }} \
+          --head $RELEASE_BRANCH \
+          --title "Release ${{ github.event.inputs.version }}" \
+          --body "This PR incorporates tag(s) update in docker compose files."
 
-            - name: Merge pull request
-              if: ${{ fromJSON(github.event.inputs.automatic_mode) == true }}
-              run: |
-                  gh pr merge $RELEASE_BRANCH \
-                  --merge --delete-branch
+      - name: Merge pull request
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true }}
+        run: |
+          gh pr merge $RELEASE_BRANCH \
+          --merge --delete-branch
 
-            - name: Checkout to main
-              if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode) == true }}
-              uses: actions/checkout@v4
-              with:
-                  ref: ${{ env.MAIN_BRANCH }}
+      - name: Checkout to main
+        if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
+          == true }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.MAIN_BRANCH }}
 
-            - name: Create pull request to main
-              if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode) == true }}
-              run: |
-                  gh pr create \
-                  --base ${{ env.MAIN_BRANCH }} \
-                  --head ${{ github.event.inputs.target_branch }} \
-                  --title "Release ${{ steps.create_release_candidate.outputs.version}} to ${{ env.MAIN_BRANCH }}" \
-                  --body "This PR incorporates tag(s) update in docker compose files."
+      - name: Create pull request to main
+        if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
+          == true }}
+        run: |
+          gh pr create \
+          --base ${{ env.MAIN_BRANCH }} \
+          --head ${{ github.event.inputs.target_branch }} \
+          --title "Release ${{ steps.create_release_candidate.outputs.version}} to ${{ env.MAIN_BRANCH }}" \
+          --body "This PR incorporates tag(s) update in docker compose files."
 
-            - name: Merge pull request to main
-              if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode) == true }}
-              run: |
-                  gh pr merge ${{ github.event.inputs.target_branch }} \
-                  --merge --delete-branch
+      - name: Merge pull request to main
+        if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
+          == true }}
+        run: |
+          gh pr merge ${{ github.event.inputs.target_branch }} \
+          --merge --delete-branch
 
-            - name: Create prerelease
-              if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease) == true}}
-              run: |
-                  gh release create ${{ github.event.inputs.version }} \
-                  --target ${{ env.MAIN_BRANCH }} \
-                  --title ${{ github.event.inputs.release_name }} \
-                  --generate-notes \
-                  --prerelease
+      - name: Create prerelease
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease)
+          == true}}
+        run: |
+          gh release create ${{ github.event.inputs.version }} \
+          --target ${{ env.MAIN_BRANCH }} \
+          --title ${{ github.event.inputs.release_name }} \
+          --generate-notes \
+          --prerelease
 
-            - name: Create release
-              if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease) == false}}
-              run: |
-                  gh release create ${{ github.event.inputs.version }} \
-                  --target ${{ env.MAIN_BRANCH }} \
-                  --title ${{ github.event.inputs.release_name }} \
-                  --generate-notes
+      - name: Create release
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease)
+          == false}}
+        run: |
+          gh release create ${{ github.event.inputs.version }} \
+          --target ${{ env.MAIN_BRANCH }} \
+          --title ${{ github.event.inputs.release_name }} \
+          --generate-notes
