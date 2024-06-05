@@ -4,13 +4,9 @@ name: Release repository
 on:
   workflow_dispatch:
     inputs:
-      source_branch:
-        description: Source branch for the release.
+      release_candidate:
+        description: Branch name of the release candidate.
         required: true
-      target_branch:
-        description: Target branch for the release.
-        required: false
-        default: ros2
       version:
         description: New version (used for tag).
         required: true
@@ -38,12 +34,14 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_BRANCH: release-${{ github.event.inputs.version }}
+      MAIN_BRANCH: ros2
+      DEVEL_BRANCH: ros2-devel
       DOCKER_IMAGE_TAG: humble-${{ github.event.inputs.version }}-${{ github.event.inputs.date }}-stable
     steps:
-      - name: Checkout
+      - name: Checkout to rc branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.source_branch }}
+          ref: ${{ github.event.inputs.release_candidate }}
 
       - name: Update docker image version
         uses: mikefarah/yq@v4.43.1
@@ -63,7 +61,7 @@ jobs:
       - name: Create PR
         run: |
           gh pr create \
-          --base ${{ github.event.inputs.source_branch }} \
+          --base ${{ github.event.inputs.release_candidate }} \
           --head $RELEASE_BRANCH \
           --title "Release ${{ github.event.inputs.version }}" \
           --body "This PR incorporates tag(s) update in docker compose files."
@@ -74,31 +72,31 @@ jobs:
           gh pr merge $RELEASE_BRANCH \
           --merge --delete-branch
 
-      - name: Checkout to target branch
+      - name: Checkout to main branch
         if:
-          ${{ github.event.inputs.source_branch != github.event.inputs.target_branch && fromJSON(github.event.inputs.automatic_mode)
+          ${{ github.event.inputs.release_candidate != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
           == true }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.target_branch }}
+          ref: ${{ env.MAIN_BRANCH }}
 
-      - name: Create PR to target branch
+      - name: Create PR to main branch
         if:
-          ${{ github.event.inputs.source_branch != github.event.inputs.target_branch && fromJSON(github.event.inputs.automatic_mode)
+          ${{ github.event.inputs.release_candidate != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
           == true }}
         run: |
           gh pr create \
-          --base ${{ github.event.inputs.target_branch }} \
-          --head ${{ github.event.inputs.source_branch }} \
-          --title "Release ${{ steps.create_release_candidate.outputs.version}} to ${{ github.event.inputs.target_branch }}" \
+          --base ${{ env.MAIN_BRANCH }} \
+          --head ${{ github.event.inputs.release_candidate }} \
+          --title "Release ${{ steps.create_release_candidate.outputs.version}} to ${{ env.MAIN_BRANCH }}" \
           --body "This PR incorporates tag(s) update in docker compose files."
 
-      - name: Merge PR to target branch
+      - name: Merge PR to main branch
         if:
-          ${{ github.event.inputs.source_branch != github.event.inputs.target_branch && fromJSON(github.event.inputs.automatic_mode)
+          ${{ github.event.inputs.release_candidate != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
           == true }}
         run: |
-          gh pr merge ${{ github.event.inputs.source_branch }} \
+          gh pr merge ${{ github.event.inputs.release_candidate }} \
           --merge --delete-branch
 
       - name: Create prerelease
@@ -107,7 +105,7 @@ jobs:
           == true}}
         run: |
           gh release create ${{ github.event.inputs.version }} \
-          --target ${{ github.event.inputs.target_branch }} \
+          --target ${{ env.MAIN_BRANCH }} \
           --title ${{ github.event.inputs.release_name }} \
           --generate-notes \
           --prerelease
@@ -118,6 +116,18 @@ jobs:
           == false}}
         run: |
           gh release create ${{ github.event.inputs.version }} \
-          --target ${{ github.event.inputs.target_branch }} \
+          --target ${{ env.MAIN_BRANCH }} \
           --title ${{ github.event.inputs.release_name }} \
           --generate-notes
+
+      - name: Checkout to devel branch
+        if: ${{ env.DEVEL_BRANCH != env.MAIN_BRANCH && fromJSON(inputs.automatic_mode) == true }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEVEL_BRANCH }}
+
+      - name: Update devel branch
+        if: ${{ env.DEVEL_BRANCH != env.MAIN_BRANCH && fromJSON(inputs.automatic_mode) == true }}
+        run: |
+          git pull origin ${{ env.MAIN_BRANCH }}
+          git push origin ${{ env.DEVEL_BRANCH }}
