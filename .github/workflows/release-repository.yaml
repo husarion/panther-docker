@@ -4,17 +4,15 @@ name: Release repository
 on:
   workflow_dispatch:
     inputs:
-      target_branch:
-        description: Target branch for the release.
+      release_candidate:
+        description: Branch name of the release candidate.
         required: true
       version:
         description: New version (used for tag).
         required: true
-      date:
-        description: Date stamp of the image to be used in the compose files.
-        required: true
       release_name:
-        description: Name of the release to be created. Version in the first place is recommended (e.g.
+        description:
+          Name of the release to be created. Version in the first place is recommended (e.g.
           `2.0.0-alpha`).
         required: true
       automatic_mode:
@@ -32,71 +30,49 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RELEASE_BRANCH: release-${{ github.event.inputs.version }}
-      DOCKER_IMAGE_TAG: humble-${{ github.event.inputs.version }}-${{ github.event.inputs.date }}-stable
       MAIN_BRANCH: ros2
+      DEVEL_BRANCH: ros2-devel
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.target_branch }}
-
-      - name: Update docker image version
-        uses: mikefarah/yq@v4.43.1
-        with:
-          cmd: |
-            yq -i '.services.panther_ros.image = "husarion/panther:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.minimal-setup.yaml
-            yq -i '.services.panther_gazebo.image = "husarion/panther-gazebo:${{ env.DOCKER_IMAGE_TAG }}" | (... | select(tag == "!!merge")) tag = ""' demo/compose.simulation.yaml
-
-      - name: Commit changes to release branch
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: Update docker image version
-          author_name: action-bot
-          author_email: action-bot@action-bot.com
-          new_branch: ${{ env.RELEASE_BRANCH }}
-
-      - name: Create pull request
-        run: |
-          gh pr create \
-          --base ${{ github.event.inputs.target_branch }} \
-          --head $RELEASE_BRANCH \
-          --title "Release ${{ github.event.inputs.version }}" \
-          --body "This PR incorporates tag(s) update in docker compose files."
-
-      - name: Merge pull request
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true }}
-        run: |
-          gh pr merge $RELEASE_BRANCH \
-          --merge --delete-branch
-
-      - name: Checkout to main
-        if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
-          == true }}
+      - name: Checkout to main branch
+        if: ${{ github.event.inputs.release_candidate != env.MAIN_BRANCH }}
         uses: actions/checkout@v4
         with:
           ref: ${{ env.MAIN_BRANCH }}
+          fetch-depth: 0
 
-      - name: Create pull request to main
-        if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
-          == true }}
+      - name: Get git diff between main and release candidate
+        id: git_diff
+        run: |
+          git fetch origin ${{ github.event.inputs.release_candidate }}:${{ github.event.inputs.release_candidate }}
+          DIFF=$(git diff --name-only ${{ github.event.inputs.release_candidate }}) # Change to "master.." to diff against last common commit
+          if [ -z "$DIFF" ]; then
+            echo "DIFF=false" >> $GITHUB_ENV
+          else
+            echo "DIFF=true" >> $GITHUB_ENV
+          fi
+
+      - name: Create PR to main branch
+        if: ${{ github.event.inputs.release_candidate != env.MAIN_BRANCH && env.DIFF == 'true' }}
         run: |
           gh pr create \
           --base ${{ env.MAIN_BRANCH }} \
-          --head ${{ github.event.inputs.target_branch }} \
-          --title "Release ${{ steps.create_release_candidate.outputs.version}} to ${{ env.MAIN_BRANCH }}" \
-          --body "This PR incorporates tag(s) update in docker compose files."
+          --head ${{ github.event.inputs.release_candidate }} \
+          --title "Release ${{ github.event.inputs.version}} to ${{ env.MAIN_BRANCH }}" \
+          --body "This PR incorporates release updates."
 
-      - name: Merge pull request to main
-        if: ${{ github.event.inputs.target_branch != env.MAIN_BRANCH && fromJSON(github.event.inputs.automatic_mode)
-          == true }}
+      - name: Merge PR to main branch
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && github.event.inputs.release_candidate != env.MAIN_BRANCH && env.DIFF == 'true' }}
         run: |
-          gh pr merge ${{ github.event.inputs.target_branch }} \
+          gh pr merge ${{ github.event.inputs.release_candidate }} \
           --merge --delete-branch
 
+      - name: Delete branch
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && github.event.inputs.release_candidate != env.MAIN_BRANCH && env.DIFF == 'false' }}
+        run: |
+          git push origin --delete ${{ github.event.inputs.release_candidate }}
+
       - name: Create prerelease
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease)
-          == true}}
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease) == true}}
         run: |
           gh release create ${{ github.event.inputs.version }} \
           --target ${{ env.MAIN_BRANCH }} \
@@ -105,10 +81,22 @@ jobs:
           --prerelease
 
       - name: Create release
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease)
-          == false}}
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease) == false}}
         run: |
           gh release create ${{ github.event.inputs.version }} \
           --target ${{ env.MAIN_BRANCH }} \
           --title ${{ github.event.inputs.release_name }} \
           --generate-notes
+
+      - name: Checkout to devel branch
+        if: ${{ env.DEVEL_BRANCH != env.MAIN_BRANCH && fromJSON(inputs.automatic_mode) == true }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEVEL_BRANCH }}
+          fetch-depth: 0
+
+      - name: Update devel branch
+        if: ${{ env.DEVEL_BRANCH != env.MAIN_BRANCH && fromJSON(inputs.automatic_mode) == true }}
+        run: |
+          git pull origin ${{ env.MAIN_BRANCH }}
+          git push origin ${{ env.DEVEL_BRANCH }}
