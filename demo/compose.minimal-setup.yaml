@@ -5,6 +5,7 @@ x-common-config: &common-config
   environment:
     - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
     - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+
 services:
   panther_ros:
     image: husarion/panther:humble-2.0.4-20240628
@@ -13,11 +14,12 @@ services:
     devices:
       - /dev/bus/usb
       - /dev/gpiochip0
-      - /dev/spidev0.0
-      - /dev/spidev0.1
+      - /dev/spiled-channel1
+      - /dev/spiled-channel2
     volumes:
+      - /dev/adc0:/dev/adc0
+      - /dev/adc1:/dev/adc1
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
-      - /sys/bus/iio/devices:/sys/bus/iio/devices
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
     # Realtime hardware (https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html#determinism)
@@ -40,4 +42,3 @@ services:
     stop_signal: SIGINT
     command: >
       bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml namespace:=panther"
-
