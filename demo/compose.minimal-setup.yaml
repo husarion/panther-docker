@@ -16,12 +16,15 @@ services:
       - /dev/gpiochip0
       - /dev/spiled-channel1
       - /dev/spiled-channel2
+    device_cgroup_rules:
+      - 'c 189:* rmw'   # USB devices
+      - 'c 254:0 rmw'   # gpiochip0
+      - 'c 153:* rmw'   # spiled-channel1, spiled-channel2
     volumes:
-      - /dev/adc0:/dev/adc0
-      - /dev/adc1:/dev/adc1
-      - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
+      - /sys/bus/iio/devices:/sys/bus/iio/devices:ro    # Read-only access to IIO devices
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa
     # Realtime hardware (https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html#determinism)
     ulimits:
       rtprio:
