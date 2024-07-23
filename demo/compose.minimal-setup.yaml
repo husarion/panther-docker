@@ -6,10 +6,9 @@ x-common-config: &common-config
     - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
     - ROBOT_NAMESPACE=panther
     - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
-
 services:
   panther_ros:
-    image: husarion/panther:humble-2.0.4-20240628
+    image: husarion/panther:humble-2.1.0-20240723
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -18,13 +17,13 @@ services:
       - /dev/spiled-channel1
       - /dev/spiled-channel2
     device_cgroup_rules:
-      - 'c 189:* rmw'   # USB devices
-      - 'c 254:0 rmw'   # gpiochip0
-      - 'c 153:* rmw'   # spiled-channel1, spiled-channel2
+      - 'c 189:* rmw' # USB devices
+      - 'c 254:0 rmw' # gpiochip0
+      - 'c 153:* rmw' # spiled-channel1, spiled-channel2
     volumes:
       - /run/husarion/panther_config.env:/run/husarion/panther_config.env
       - /run/husarion/panther_config.yaml:/run/husarion/panther_config.yaml
-      - /sys/bus/iio/devices:/sys/bus/iio/devices:ro    # Read-only access to IIO devices
+      - /sys/bus/iio/devices:/sys/bus/iio/devices:ro # Read-only access to IIO devices
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
     # Realtime hardware (https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html#determinism)
     ulimits:
@@ -55,7 +54,6 @@ services:
       - 8080:8080
     volumes:
       - ./config/webui_layout.json:/foxglove/default-layout.json
-
   webui-ds:
     image: husarion/foxglove-bridge:humble-0.7.7-20240708
     container_name: webui-ds
