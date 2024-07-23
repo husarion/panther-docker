@@ -48,7 +48,7 @@ services:
       bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml namespace:=panther"
 
   webui:
-    image: husarion/foxglove:studio-nightly
+    image: husarion/foxglove:studio-20240723
     container_name: webui
     <<: *common-config
     ports:
