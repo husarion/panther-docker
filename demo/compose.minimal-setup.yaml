@@ -54,7 +54,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./webui_layout.json:/foxglove/default-layout.json
+      - ./config/webui_layout.json:/foxglove/default-layout.json
 
   webui-ds:
     image: husarion/foxglove-bridge:humble-0.7.7-20240708
