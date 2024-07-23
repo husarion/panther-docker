@@ -4,11 +4,12 @@ x-common-config: &common-config
   restart: always
   environment:
     - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
+    - ROBOT_NAMESPACE=panther
     - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 
 services:
   panther_ros:
-    image: husarion/panther:humble-ros2-devel # TODO: Change to stable version
+    image: husarion/panther:humble-2.0.4-20240628
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -46,22 +47,19 @@ services:
     command: >
       bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml namespace:=panther"
 
-  foxglove:
-    image: husarion/foxglove:improvements-nightly
+  webui:
+    image: husarion/foxglove:studio-nightly
+    container_name: webui
     <<: *common-config
     ports:
       - 8080:8080
     volumes:
-      - ./config/foxglove-layout.json:/foxglove/default-layout.json
-      - ./config/Caddyfile:/etc/caddy/Caddyfile
-    environment:
-      - ROBOT_NAMESPACE=panther
-      - DISABLE_CACHE=true
-      - DISABLE_INTERACTION=false
+      - ./webui-layout.json:/foxglove/default-layout.json
 
-  foxglove-ds:
+  webui-ds:
     image: husarion/foxglove-bridge:humble-0.7.7-20240708
+    container_name: webui-ds
     <<: *common-config
     ports:
       - 8765:8765
-    command: ros2 launch foxglove_bridge foxglove_bridge_launch.xml port:=8765 capabilities:=[clientPublish,parameters,parametersSubscribe,services,connectionGraph,assets]
+    command: ros2 launch foxglove_bridge foxglove_bridge_launch.xml
