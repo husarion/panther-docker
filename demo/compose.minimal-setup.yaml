@@ -8,7 +8,7 @@ x-common-config: &common-config
     - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 services:
   panther_ros:
-    image: husarion/panther:humble-2.1.0-20240723
+    image: husarion/panther:humble-2.1.1-20240828
     container_name: panther_ros
     <<: *common-config
     devices:
@@ -47,3 +47,4 @@ services:
     stop_signal: SIGINT
     command: >
       bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml namespace:=panther"
+
