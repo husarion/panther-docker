@@ -7,9 +7,9 @@ x-common-config: &common-config
     - ROBOT_NAMESPACE=lynx
     - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 services:
-  panther_ros:
+  lynx_ros:
     image: husarion/panther:humble-ros2-lynx-alpha
-    container_name: panther_ros
+    container_name: lynx_ros
     <<: *common-config
     devices:
       - /dev/bus/usb
