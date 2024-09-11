@@ -4,6 +4,9 @@ name: Build/Publish ROS Docker Image
 on:
   workflow_dispatch:
     inputs:
+      panther_codebase_version:
+        description: Version of the panther_ros to be used in the docker image (branch/tag/commit).
+        required: true
       build_type:
         description: Is it a "development" or a "stable" release?
         required: true
@@ -48,13 +51,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker Image
-        uses: husarion-ci/ros-docker-img-action@v0.5
+        uses: husarion-ci/ros-docker-img-action@v0.6
         with:
           dockerhub_username: ${{ secrets.DOCKERHUB_USERNAME }}
           dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
           main_branch_name: ros2
           dockerfile: ${{ matrix.dockerfile }}
           repo_name: ${{ matrix.repo_name }}
+          branch_name: ${{ inputs.panther_codebase_version }}
           build_type: ${{ inputs.build_type }}
           ros_distro: ${{ matrix.ros_distro }}
           platforms: ${{ matrix.platforms }}
