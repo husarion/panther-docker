@@ -1,5 +1,6 @@
 ARG ROS_DISTRO=humble
 ARG BUILD_TEST=OFF
+ARG BRANCH_NAME=ros2-devel
 
 FROM husarnet/ros:${ROS_DISTRO}-ros-core
 
@@ -13,7 +14,7 @@ RUN apt-get update  && \
     apt-get install -y \
         ros-dev-tools && \
     # Setup workspace
-    git clone -b ros2-devel https://github.com/husarion/panther_ros.git src/panther_ros && \
+    git clone -b ${BRANCH_NAME} https://github.com/husarion/panther_ros.git src/panther_ros && \
     vcs import src < src/panther_ros/panther/panther_${HUSARION_ROS_BUILD_TYPE}.repos && \
     cp -r src/ros2_controllers/diff_drive_controller src && \
     cp -r src/ros2_controllers/imu_sensor_broadcaster src && \
