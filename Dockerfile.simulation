@@ -1,8 +1,9 @@
 ARG ROS_DISTRO=humble
-ARG BUILD_TEST=OFF
-ARG BRANCH_NAME=ros2-devel
 
 FROM husarnet/ros:${ROS_DISTRO}-ros-core
+
+ARG BRANCH_NAME=ros2-devel
+ARG BUILD_TEST=OFF
 
 ENV HUSARION_ROS_BUILD_TYPE=simulation
 
