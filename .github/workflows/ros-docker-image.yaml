@@ -7,6 +7,8 @@ on:
       panther_codebase_version:
         description: Version of the panther_ros to be used in the docker image (branch/tag/commit).
         required: true
+        type: string
+        default: ros2-devel
       build_type:
         description: Is it a "development" or a "stable" release?
         required: true
