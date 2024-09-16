@@ -38,4 +38,4 @@ RUN apt-get update  && \
     rm -rf /var/lib/apt/lists/*
 
 # Setup envs from eeprom
-RUN sed -i "/# <additional-user-commands>/i set -e -a && source /run/husarion/panther_config.env" /*_entrypoint.sh
+RUN sed -i "/# <additional-user-commands>/i set -e -a && source /run/husarion/robot_config.env" /*_entrypoint.sh
