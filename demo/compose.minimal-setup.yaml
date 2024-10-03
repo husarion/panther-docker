@@ -4,7 +4,7 @@ x-common-config: &common-config
   restart: always
   environment:
     - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
-    - ROBOT_NAMESPACE=panther
+    - ROBOT_NAMESPACE=${ROBOT_MODEL:-panther}
     - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
 services:
   panther_ros:
@@ -37,7 +37,7 @@ services:
       ros2 launch panther_bringup bringup.launch.py
 
   gamepad_controller:
-    image: husarion/joy2twist:humble-1.0.0-20240725-stable
+    image: husarion/joy2twist:humble-1.0.0-20241003
     container_name: gamepad_controller
     <<: *common-config
     devices:
@@ -46,5 +46,4 @@ services:
       - 'c 13:0 rmw' # gamepad
     stop_signal: SIGINT
     command: >
-      bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_panther.yaml namespace:=panther"
-
+      bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_ugv.yaml"
