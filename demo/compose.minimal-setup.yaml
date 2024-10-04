@@ -37,7 +37,7 @@ services:
       ros2 launch panther_bringup bringup.launch.py
 
   gamepad_controller:
-    image: husarion/joy2twist:humble-1.0.0-20241003
+    image: husarion/joy2twist:humble-1.0.0-20241003-stable
     container_name: gamepad_controller
     <<: *common-config
     devices:
