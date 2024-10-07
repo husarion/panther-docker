@@ -58,4 +58,6 @@ docker compose -f compose.simulation.yaml up
 ```
 
 > [!NOTE]
-> If you have an NVIDIA GPU, it is worth changing the compose configuration from cpu-config to gpu-config. For this purpose, it is necessary to install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed, modify following Docker compose file by replacing `*cpu-config` with `*gpu-config`: [compose.simulation.yaml](./demo/compose.simulation.yaml).
+>
+> 1. You can change robot model and namespace by editing the launch command in `compose.simulation.yaml`.
+> 2. If you have an NVIDIA GPU, it is worth changing the compose configuration from `cpu-config` to `gpu-config`. For this purpose, it is necessary to install [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html). With NVIDIA Container Toolkit installed, modify following Docker compose file by replacing `*cpu-config` with `*gpu-config`: [compose.simulation.yaml](./demo/compose.simulation.yaml).
