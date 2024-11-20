@@ -2,14 +2,13 @@ x-common-config: &common-config
   network_mode: host
   ipc: host
   restart: always
-  environment:
-    - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp # Default FastDDS do not work
-    - ROBOT_NAMESPACE=lynx
-    - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+  env_file:
+    - ./config/.env
+
 services:
-  lynx_ros:
+  husarion_ugv_ros:
     image: husarion/panther:humble-ros2-lynx-devel
-    container_name: lynx_ros
+    container_name: husarion_ugv_ros
     <<: *common-config
     devices:
       - /dev/bus/usb
@@ -25,6 +24,7 @@ services:
       - /run/husarion/robot_config.yaml:/run/husarion/robot_config.yaml
       - /sys/bus/iio/devices:/sys/bus/iio/devices:ro # Read-only access to IIO devices
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
+      - ./config:/config
     # Realtime hardware (https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html#determinism)
     ulimits:
       rtprio:
