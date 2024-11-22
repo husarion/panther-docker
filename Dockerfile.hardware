@@ -41,4 +41,4 @@ COPY update_config_directory.sh /usr/local/sbin/update_config_directory
 COPY setup_environment.sh /usr/local/sbin/setup_environment
 
 # Setup envs from eeprom
-RUN sed -i "/# <additional-user-commands>/i setup_environment" /*_entrypoint.sh
+RUN sed -i "/# <additional-user-commands>/i source setup_environment" /*_entrypoint.sh
