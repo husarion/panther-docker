@@ -5,7 +5,7 @@ set -e
 source /run/husarion/robot_config.env
 
 # Copy files to /config directory if the directory is empty except for .env and cyclonedds.xml
-if [ "! $(ls /config | grep -v '^\.env$' | grep -v '^\cyclonedds.xml$')" ]; then
+if [ -z "$(find /config -type f | grep -v '/\.env$' | grep -v '/cyclonedds.xml$')" ]; then
   echo "Config directory is empty, copying files."
   update_config_directory
 fi
