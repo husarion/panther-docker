@@ -34,3 +34,6 @@ copy_package_file husarion_ugv_manager behavior_trees/lights.xml
 copy_package_file husarion_ugv_manager behavior_trees/LightsBT.btproj
 copy_package_file panther_description config/components.yaml
 copy_package_file lynx_description config/components.yaml
+
+# Change ownership of the copied files to host user
+chown -R 1000:1001 /config
