@@ -32,13 +32,22 @@ cd panther-docker/demo
 
 ### 🤖 Robot
 
-1. Activate Panther
+1. (Optional) Updating configuration files.
+
+   > [!NOTE]
+   > This may overwrite your changes made in the `config` directory. If you want to keep your configuration you should skip this step or create backup of the `config` directory.
+
+   ```bash
+   docker run --rm -v /home/husarion/config:/config husarion/panther:humble-<newest_tag> update_config_directory
+   ```
+
+2. Activate Panther
 
    ```bash
    docker compose -f compose.minimal-setup.yaml up
    ```
 
-2. Launch Visualization on PC
+3. Launch Visualization on PC
 
    ```bash
    xhost local:root
