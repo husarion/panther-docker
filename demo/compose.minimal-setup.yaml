@@ -3,7 +3,7 @@ x-common-config: &common-config
   ipc: host
   restart: always
   env_file:
-    - ./config/.env
+    - ./config/.env # env configuration including namespace, domain id, DDS, etc.
 
 services:
   husarion_ugv_ros:
