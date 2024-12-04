@@ -3,7 +3,7 @@ x-common-config: &common-config
   ipc: host
   restart: always
   env_file:
-    - ./config/.env # env configuration including namespace, domain id, DDS, etc.
+    - ./config/common/.env # env configuration including namespace, domain id, DDS, etc.
 
 services:
   husarion_ugv_ros:
@@ -41,12 +41,12 @@ services:
     container_name: gamepad_controller
     <<: *common-config
     volumes:
-      - ./joy2twist_lynx.yaml:/joy2twist.yaml
+      - /config/common/joy2twist.yaml:/joy2twist.yaml
     devices:
       - /dev/input/js0
     device_cgroup_rules:
       - 'c 13:0 rmw' # gamepad
     stop_signal: SIGINT
     command: >
-      bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_ugv.yaml"
+      bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=/joy2twist.yaml"
 
