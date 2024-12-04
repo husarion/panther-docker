@@ -11,8 +11,7 @@ on:
         description: New version (used for tag).
         required: true
       release_name:
-        description:
-          Name of the release to be created. Version in the first place is recommended (e.g.
+        description: Name of the release to be created. Version in the first place is recommended (e.g.
           `2.0.0-alpha`).
         required: true
       automatic_mode:
@@ -61,18 +60,21 @@ jobs:
           --body "This PR incorporates release updates."
 
       - name: Merge PR to main branch
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && github.event.inputs.release_candidate != env.MAIN_BRANCH && env.DIFF == 'true' }}
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && github.event.inputs.release_candidate
+          != env.MAIN_BRANCH && env.DIFF == 'true' }}
         run: |
           gh pr merge ${{ github.event.inputs.release_candidate }} \
           --merge --delete-branch
 
       - name: Delete branch
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && github.event.inputs.release_candidate != env.MAIN_BRANCH && env.DIFF == 'false' }}
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && github.event.inputs.release_candidate
+          != env.MAIN_BRANCH && env.DIFF == 'false' }}
         run: |
           git push origin --delete ${{ github.event.inputs.release_candidate }}
 
       - name: Create prerelease
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease) == true}}
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease)
+          == true}}
         run: |
           gh release create ${{ github.event.inputs.version }} \
           --target ${{ env.MAIN_BRANCH }} \
@@ -81,7 +83,8 @@ jobs:
           --prerelease
 
       - name: Create release
-        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease) == false}}
+        if: ${{ fromJSON(github.event.inputs.automatic_mode) == true && fromJSON(github.event.inputs.prerelease)
+          == false}}
         run: |
           gh release create ${{ github.event.inputs.version }} \
           --target ${{ env.MAIN_BRANCH }} \
