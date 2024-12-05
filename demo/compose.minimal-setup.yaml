@@ -48,5 +48,5 @@ services:
       - 'c 13:0 rmw' # gamepad
     stop_signal: SIGINT
     command: >
-      bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=/joy2twist.yaml"
+      ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=/joy2twist.yaml
 
