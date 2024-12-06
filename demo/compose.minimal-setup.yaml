@@ -41,7 +41,7 @@ services:
     container_name: gamepad_controller
     <<: *common-config
     volumes:
-      - /config/common/joy2twist.yaml:/joy2twist.yaml
+      - /home/husarion/config/common/joy2twist.yaml:/joy2twist.yaml
     devices:
       - /dev/input/js0
     device_cgroup_rules:
