@@ -3,7 +3,7 @@ x-common-config: &common-config
   ipc: host
   restart: always
   env_file:
-    - ./config/.env # env configuration including namespace, domain id, DDS, etc.
+    - /home/husarion/config/common/.env # env configuration including namespace, domain id, DDS, etc.
 
 services:
   husarion_ugv_ros:
@@ -24,7 +24,7 @@ services:
       - /run/husarion/robot_config.yaml:/run/husarion/robot_config.yaml
       - /sys/bus/iio/devices:/sys/bus/iio/devices:ro # Read-only access to IIO devices
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
-      - ./config:/config
+      - /home/husarion/config:/config
     # Realtime hardware (https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html#determinism)
     ulimits:
       rtprio:
@@ -41,12 +41,12 @@ services:
     container_name: gamepad_controller
     <<: *common-config
     volumes:
-      - ./joy2twist_lynx.yaml:/joy2twist.yaml
+      - /config/common/joy2twist.yaml:/joy2twist.yaml
     devices:
       - /dev/input/js0
     device_cgroup_rules:
       - 'c 13:0 rmw' # gamepad
     stop_signal: SIGINT
     command: >
-      bash -c "ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=$(ros2 pkg prefix joy2twist)/share/joy2twist/config/joy2twist_ugv.yaml"
+      ros2 launch joy2twist gamepad_controller.launch.py joy2twist_params_file:=/joy2twist.yaml
 
